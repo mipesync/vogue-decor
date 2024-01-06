@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33122.133
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vogue-decor.Application", "vogue-decor.Application\vogue-decor.Application.csproj", "{7CBA8EBC-D5E0-4FAA-AD89-93AD3F5D8CB2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vogue-decor.Domain", "vogue-decor.Domain\vogue-decor.Domain.csproj", "{FEF7F2E0-C8C3-45AF-ADA9-D63762443752}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "vogue-decor.Persistence", "vogue-decor.Persistence\vogue-decor.Persistence.csproj", "{266DDB10-536B-45C9-AA5B-FA711BC98C06}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{9932A281-3B90-4B5A-9336-B4EF5C6495E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "vogue-decor.API", "vogue-decor.API\vogue-decor.API.csproj", "{202A502B-FE0C-4DC0-BB68-F962627721EC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7CBA8EBC-D5E0-4FAA-AD89-93AD3F5D8CB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CBA8EBC-D5E0-4FAA-AD89-93AD3F5D8CB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CBA8EBC-D5E0-4FAA-AD89-93AD3F5D8CB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CBA8EBC-D5E0-4FAA-AD89-93AD3F5D8CB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEF7F2E0-C8C3-45AF-ADA9-D63762443752}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEF7F2E0-C8C3-45AF-ADA9-D63762443752}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEF7F2E0-C8C3-45AF-ADA9-D63762443752}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEF7F2E0-C8C3-45AF-ADA9-D63762443752}.Release|Any CPU.Build.0 = Release|Any CPU
+		{266DDB10-536B-45C9-AA5B-FA711BC98C06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{266DDB10-536B-45C9-AA5B-FA711BC98C06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{266DDB10-536B-45C9-AA5B-FA711BC98C06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{266DDB10-536B-45C9-AA5B-FA711BC98C06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9932A281-3B90-4B5A-9336-B4EF5C6495E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9932A281-3B90-4B5A-9336-B4EF5C6495E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9932A281-3B90-4B5A-9336-B4EF5C6495E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9932A281-3B90-4B5A-9336-B4EF5C6495E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{202A502B-FE0C-4DC0-BB68-F962627721EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{202A502B-FE0C-4DC0-BB68-F962627721EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{202A502B-FE0C-4DC0-BB68-F962627721EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{202A502B-FE0C-4DC0-BB68-F962627721EC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2CC76658-7DFA-4A64-8195-44BB03BE1705}
+	EndGlobalSection
+EndGlobal

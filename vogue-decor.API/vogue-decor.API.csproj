@@ -1,0 +1,70 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>vogue_decor</RootNamespace>
+    <UserSecretsId>d5e44bd5-0aaf-4477-abf4-bd4a9e05deb7</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <GenerateRuntimeConfigurationFiles>True</GenerateRuntimeConfigurationFiles>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;1591</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;1591</NoWarn>
+  </PropertyGroup>
+	
+    <PropertyGroup>
+      <GenerateDocumentationFile>true</GenerateDocumentationFile>
+      <NoWarn>$(NoWarn);1591</NoWarn>
+      <DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
+    </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="7.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.18.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.5.0" />
+    <PackageReference Include="Unchase.Swashbuckle.AspNetCore.Extensions" Version="2.7.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\vogue-decor.Persistence\vogue-decor.Persistence.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\2bd5c2ce-9e88-4aa5-ba3d-05b9e9b4373a\7cad4579-3e2b-4f85-8c6f-a485572e73ce.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\4afcb45e-3c21-46f2-a0ba-85d2143ce7fb\a3394ed6-403e-4943-9131-6bf41886a749.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\8cdb2f7e-a020-44ed-9b7b-03d7d7d084a6\1022a351-f29b-474b-9760-cc848a16fc9d.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\320ab23f-d137-4341-8a56-1b1418ff6c5b\bf12c178-4e05-4cbb-9842-0108f52025bf.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\22638bf1-d5ba-40fb-ab30-a3f94b5a4eeb\0234428c-5082-40c8-9421-f614a7cbbdb7.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\22638bf1-d5ba-40fb-ab30-a3f94b5a4eeb\06dea948-10e7-4360-beb9-6304e60fc930.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\394893f7-b95f-4d0b-8c38-81abc89dc4a9\16823fde-c628-44f8-865d-f3ae792ab9fe.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\394893f7-b95f-4d0b-8c38-81abc89dc4a9\a37f4ad8-8db1-46e1-9c87-9037dbef522a.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\394893f7-b95f-4d0b-8c38-81abc89dc4a9\ab0ba92c-5e3f-4f6c-98ba-695a6d38581c.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\394893f7-b95f-4d0b-8c38-81abc89dc4a9\dfe4de1d-16f9-4675-8eb0-7c3702d80902.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\b013d8ff-06fc-48b8-a84b-79c444a21c6e\5c977ce7-6e02-4f1a-a4ea-4308ca34458f.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\ef0dc1d2-cf1c-4389-9dfe-7f2d4f51ee37\d7711bd3-55c3-4a02-98b3-73671577b226.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\storage\2dca7646-00fe-452b-9b62-0a684ed014cc.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\storage\32042a02-d7aa-4bfc-bdd9-6d3c3ad6dc2b.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\storage\5076df0d-23b4-4742-ac3f-61aef345bf5a.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\storage\7dc82870-fdfe-4690-a866-c627b9dfa0cf.jpg" />
+    <_ContentIncludedByDefault Remove="wwwroot\storage\e3d50c77-1034-48b8-8756-8b69956d863d.jpg" />
+  </ItemGroup>
+
+</Project>
