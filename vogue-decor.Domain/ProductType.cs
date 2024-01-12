@@ -1,22 +1,19 @@
 ﻿using NpgsqlTypes;
+using vogue_decor.Domain.Interfaces;
 
 namespace vogue_decor.Domain;
 
 /// <summary>
 /// Класс типа товара
 /// </summary>
-public class ProductType
+public class ProductType : IBaseFilterItem
 {
-    /// <summary>
-    /// Идентификатор типа товара
-    /// </summary>
     public int Id { get; set; }
-    /// <summary>
-    /// Название типа товара
+    public string Name { get; set; } = null!;
+    public NpgsqlTsVector? SearchVector { get; set; }
+
+    /*/// <summary>
+    /// Список категорий
     /// </summary>
-    public string Name { get; set; }
-    /// <summary>
-    /// Поисковой вектор
-    /// </summary>
-    public NpgsqlTsVector SearchVector { get; set; }
+    public List<Category> Categories { get; set; } = new();*/
 }

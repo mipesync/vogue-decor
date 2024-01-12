@@ -24,8 +24,13 @@ namespace vogue_decor.Persistence
         public DbSet<Collection> Collections { get; set; }
         public DbSet<Color> Colors { get; set; }
         public DbSet<ProductType> ProductTypes { get; set; }
-        public DbSet<ChandelierType> ChandelierTypes { get; set; }
         public DbSet<File> Files { get; set; }
+        public DbSet<Brand> Brands { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Material> Materials { get; set; }
+        public DbSet<ProductMaterial> ProductMaterials { get; set; }
+        public DbSet<ProductStyle> ProductStyles { get; set; }
+        public DbSet<Style> Styles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

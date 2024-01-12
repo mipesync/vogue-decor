@@ -19,18 +19,6 @@ public interface IFiltersRepository
     /// <param name="id">Идентифкатор цвета</param>
     /// <returns></returns>
     Task DeleteColor(int id);
-    
-    /// <summary>
-    /// Добавить тип люстры
-    /// </summary>
-    /// <param name="name">Название типа люстры</param>
-    Task AddChanType(string name);
-    /// <summary>
-    /// Удалить тип люстры
-    /// </summary>
-    /// <param name="id">Идентификатор типа люстры</param>
-    Task DeleteChanType(int id);
-    
     /// <summary>
     /// Добавить тип товара
     /// </summary>

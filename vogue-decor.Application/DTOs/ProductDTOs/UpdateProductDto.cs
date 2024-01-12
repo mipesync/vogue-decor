@@ -22,7 +22,7 @@ namespace vogue_decor.Application.DTOs.ProductDTOs
         /// <summary>
         /// Тип товара
         /// </summary>
-        public ProductTypes? Type { get; set; }
+        public int? Type { get; set; }
         /// <summary>
         /// Артикль товара
         /// </summary>

@@ -25,6 +25,6 @@
         /// <summary>
         /// Список товаров из коллекции
         /// </summary>
-        public List<Product> Products { get; set; } = new List<Product>();
+        public List<Product> Products { get; set; } = new();
     }
 }

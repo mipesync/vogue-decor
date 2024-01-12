@@ -1,6 +1,6 @@
-﻿using vogue_decor.Domain.Enums;
+﻿using System.Xml.Serialization;
 using NpgsqlTypes;
-using System.Xml.Serialization;
+using vogue_decor.Domain.Interfaces.ProductFields;
 
 namespace vogue_decor.Domain
 {
@@ -9,76 +9,62 @@ namespace vogue_decor.Domain
     /// </summary>
     [Serializable]
     [XmlRoot("product")]
-    public class Product
+    public class Product : IBaseProduct, IDimensions, IDiameter, IPictureMaterial, IIndent
     {
         /// <summary>
         /// Идентификатор товара
         /// </summary>
-        public Guid Id { get; set; } = Guid.Empty;
-        /// <summary>
-        /// Название товара
-        /// </summary>
+        public Guid Id { get; set; }
+        
         [XmlElement("name")]
-        public string Name { get; set; } = string.Empty;
-        /// <summary>
-        /// Описание товара
-        /// </summary>
+        public string Name { get; set; } = null!;
+        
         [XmlElement("description")]
         public string? Description { get; set; }
         /// <summary>
         /// Тип товара
         /// </summary>
+        public int ProductType { get; set; }
+        /// <summary>
+        /// Тип конкретного товара
+        /// </summary>
         [XmlElement("type")]
-        public int Type { get; set; }
-        /// <summary>
-        /// Артикул товара
-        /// </summary>
+        public int[] Types { get; set; } = null!;
+        
         [XmlElement("article")]
-        public string Article { get; set; } = string.Empty;
-        /// <summary>
-        /// Цена товара
-        /// </summary>
+        public string Article { get; set; } = null!;
+        
+        public string Code { get; set; } = null!;
+        
         [XmlElement("price")]
-        public decimal Price { get; set; } = 0m;
-        /// <summary>
-        /// Цвет товара
-        /// </summary>
+        public decimal Price { get; set; }
+        
         [XmlElement("color")]
-        public int[]? Colors { get; set; }
-        /// <summary>
-        /// Диаметр товара
-        /// </summary>
+        public int[] Colors { get; set; } = null!;
+        
         [XmlElement("diameter")]
-        public int? Diameter { get; set; }
-        /// <summary>
-        /// Высота товара
-        /// </summary>
-        [XmlElement("heigth")]
-        public int? Height { get; set; }
-        /// <summary>
-        /// Длина товара
-        /// </summary>
+        public decimal? Diameter { get; set; }
+        
+        [XmlElement("height")]
+        public decimal? Height { get; set; }
+        
         [XmlElement("length")]
-        public int? Length { get; set; }
-        /// <summary>
-        /// Ширина товара
-        /// </summary>
+        public decimal? Length { get; set; }
+        
         [XmlElement("width")]
-        public int? Width { get; set; }
-        /// <summary>
-        /// Файлы товара (фото, видео)
-        /// </summary>
+        public decimal? Width { get; set; }
+        
+        [XmlElement("pictureMaterial")]
+        public int[]? PictureMaterial { get; set; }
+        
+        [XmlElement("indent")]
+        public decimal? Indent { get; set; }
+
         [XmlElement("urls")]
         public List<string> Urls { get; set; } = new();
-        /// <summary>
-        /// Скидка товара
-        /// </summary>
-        public int? Discount { get; set; }
-
-        /// <summary>
-        /// Тип люстры
-        /// </summary>
-        public int[]? ChandelierTypes { get; set; }
+        
+        [XmlElement("discount")]
+        public uint? Discount { get; set; }
         /// <summary>
         /// Цоколь лампочки
         /// </summary>
@@ -92,15 +78,19 @@ namespace vogue_decor.Domain
         /// <summary>
         /// Рейтинг товара
         /// </summary>
-        public int? Rating { get; set; }
+        public decimal? Rating { get; set; }
         /// <summary>
         /// Наличие товара
         /// </summary>
-        public int? Availability { get; set; }
+        public int Availability { get; set; }
         /// <summary>
         /// Идентификатор коллекции
         /// </summary>
         public Guid? CollectionId { get; set; }
+        /// <summary>
+        /// Идентификатор бренда
+        /// </summary>
+        public Guid BrandId { get; set; }
         /// <summary>
         /// Дата публикации товара
         /// </summary>
@@ -114,6 +104,14 @@ namespace vogue_decor.Domain
         /// </summary>
         [XmlIgnore]
         public virtual NpgsqlTsVector? SearchVector { get; set; }
+        /// <summary>
+        /// Список стилей товара
+        /// </summary>
+        public int[]? Styles { get; set; }
+        /// <summary>
+        /// Список материалов товара
+        /// </summary>
+        public int[]? Materials { get; set; }
 
         /// <summary>
         /// Список пользователей, которые добавили товар в корзину
@@ -128,8 +126,22 @@ namespace vogue_decor.Domain
         /// </summary>
         public Collection? Collection { get; set; }
         /// <summary>
+        /// Бренд товара
+        /// </summary>
+        public Brand Brand { get; set; } = new();
+        /// <summary>
         /// Список промежуточных сущностей "Избранные"
         /// </summary>
         public List<Favourite> Favourites { get; set; } = new();
+        /// <summary>
+        /// Список объектов стилей
+        /// </summary>
+        public List<Style> StylesObj { get; set; } = new();
+        public List<ProductStyle> ProductStyles { get; set; } = new();
+        /// <summary>
+        /// Список объектов материалов
+        /// </summary>
+        public List<Material> MaterialsObj { get; set; } = new();
+        public List<ProductMaterial> ProductMaterials { get; set; } = new();
     }
 }

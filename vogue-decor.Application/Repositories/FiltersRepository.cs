@@ -35,25 +35,6 @@ public class FiltersRepository : IFiltersRepository
         await _dbContext.SaveChangesAsync(CancellationToken.None);
     }
 
-    public async Task AddChanType(string name)
-    {
-        var chanType = new ChandelierType { Name = name };
-
-        await _dbContext.ChandelierTypes.AddAsync(chanType, CancellationToken.None);
-        await _dbContext.SaveChangesAsync(CancellationToken.None);
-    }
-
-    public async Task DeleteChanType(int id)
-    {
-        var chanType = await _dbContext.ChandelierTypes.FirstOrDefaultAsync(u => u.Id == id, CancellationToken.None);
-
-        if (chanType is null)
-            throw new NotFoundException("Тип люстры не найден");
-
-        _dbContext.ChandelierTypes.Remove(chanType);
-        await _dbContext.SaveChangesAsync(CancellationToken.None);
-    }
-
     public async Task AddProductType(string name)
     {
         var productType = new ProductType { Name = name };
@@ -78,7 +59,6 @@ public class FiltersRepository : IFiltersRepository
         var result = new FiltersResponseDto();
         
         var colors = await _dbContext.Colors.ToListAsync();
-        var chanTypes = await _dbContext.ChandelierTypes.ToListAsync();
         var productTypes = await _dbContext.ProductTypes.ToListAsync();
 
         foreach (var color in colors)
@@ -88,15 +68,6 @@ public class FiltersRepository : IFiltersRepository
                 Id = color.Id,
                 Name = color.Name,
                 EngName = color.EngName
-            });
-        }
-        
-        foreach (var chanType in chanTypes)
-        {
-            result.ChandelierTypes.Add(new FilterLookup
-            {
-                Id = chanType.Id,
-                Name = chanType.Name
             });
         }
         

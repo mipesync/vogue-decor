@@ -43,13 +43,33 @@ namespace vogue_decor.Application.Interfaces
         /// </summary>
         DbSet<ProductType> ProductTypes { get; set; }
         /// <summary>
-        /// Получить/установить список типов люстр
-        /// </summary>
-        DbSet<ChandelierType> ChandelierTypes { get; set; }
-        /// <summary>
         /// Получить/установаить список файлов
         /// </summary>
         DbSet<File> Files { get; set; }
+        /// <summary>
+        /// Получить/установаить список брендов
+        /// </summary>
+        DbSet<Brand> Brands { get; set; }
+        /// <summary>
+        /// Получить/установаить список категорий
+        /// </summary>
+        DbSet<Category> Categories { get; set; }
+        /// <summary>
+        /// Получить/установаить список материалов
+        /// </summary>
+        DbSet<Material> Materials { get; set; }
+        /// <summary>
+        /// Получить/установаить список промежуточных записей товара-материалов
+        /// </summary>
+        DbSet<ProductMaterial> ProductMaterials { get; set; }
+        /// <summary>
+        /// Получить/установаить список промежуточных записей товара-стилей
+        /// </summary>
+        DbSet<ProductStyle> ProductStyles { get; set; }
+        /// <summary>
+        /// Получить/установаить список стилей
+        /// </summary>
+        DbSet<Style> Styles { get; set; }
 
         /// <summary>
         ///     Ассинхронно сохраняет сделанные изменения

@@ -84,7 +84,6 @@ namespace vogue_decor.Controllers
         [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
         public async Task<IActionResult> AddChanType([FromQuery] string name)
         {
-            await _filtersRepository.AddChanType(name);
 
             return Ok();
         }
@@ -103,7 +102,6 @@ namespace vogue_decor.Controllers
         [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
         public async Task<IActionResult> DeleteChanType([FromQuery] int chandelierTypeId)
         {
-            await _filtersRepository.DeleteChanType(chandelierTypeId);
 
             return Ok();
         }

@@ -158,10 +158,9 @@ namespace vogue_decor.Application.Repositories
             string hostUrl)
         {
             Expression <Func<Product, bool>> filterExpression = u => 
-                (dto.Types == null || dto.Types.Contains(u.Type)) &&
+                (dto.Types == null || dto.Types.Contains(u.ProductType)) &&
                 (u.Price >= dto.MinPrice && u.Price <= dto.MaxPrice) &&
                 (dto.Colors == null || u.Colors.Any(c => dto.Colors.Contains(c))) &&
-                (dto.ChandelierTypes == null || u.ChandelierTypes!.Any(j => dto.ChandelierTypes.Contains(j))) &&
                 (u.Diameter >= dto.MinDiameter && u.Diameter <= dto.MaxDiameter) &&
                 (u.LampCount >= dto.MinLampCount && u.LampCount <= dto.MaxLampCount) &&
                 (dto.IsSale == null || u.Discount > 0 == dto.IsSale) &&
@@ -461,10 +460,9 @@ namespace vogue_decor.Application.Repositories
         public async Task<ProductsCountResponseDto> GetCount(GetProductsCountDto dto)
         {
             Expression<Func<Product, bool>> defaultExpression = u => 
-                (dto.Types == null || dto.Types.Contains(u.Type)) &&
+                (dto.Types == null || dto.Types.Contains(u.ProductType)) &&
                 (u.Price >= dto.MinPrice && u.Price <= dto.MaxPrice) &&
                 (dto.Colors == null || u.Colors.Any(c => dto.Colors.Contains(c))) &&
-                (dto.ChandelierTypes == null || u.ChandelierTypes!.Any(j => dto.ChandelierTypes.Contains(j))) &&
                 (u.Diameter >= dto.MinDiameter && u.Diameter <= dto.MaxDiameter) &&
                 (u.LampCount >= dto.MinLampCount && u.LampCount <= dto.MaxLampCount) &&
                 (!dto.IsSale || u.Discount > 0) &&
@@ -567,15 +565,6 @@ namespace vogue_decor.Application.Repositories
                 .Select(u => u.Id).ToArrayAsync();
 
             return colors;
-        }
-
-        private async Task<int[]> GetChanTypesIdFromDbAsync(string query)
-        {
-            var chanTypes = await _dbContext.ChandelierTypes.AsNoTracking()
-                .Where(u => u.SearchVector.Matches(query))
-                .Select(u => u.Id).ToArrayAsync();
-
-            return chanTypes;
         }
 
         private async Task<int[]> GetProdTypesIdFromDbAsync(string query)
