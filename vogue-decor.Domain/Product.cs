@@ -76,6 +76,11 @@ namespace vogue_decor.Domain
         [XmlElement("lampCount")]
         public int? LampCount { get; set; }
         /// <summary>
+        /// Типы люстр
+        /// </summary>
+        [XmlElement("chandelierTypes")]
+        public int[]? ChandelierTypes { get; set; }
+        /// <summary>
         /// Рейтинг товара
         /// </summary>
         public decimal? Rating { get; set; }
@@ -128,7 +133,7 @@ namespace vogue_decor.Domain
         /// <summary>
         /// Бренд товара
         /// </summary>
-        public Brand Brand { get; set; } = new();
+        public Brand? Brand { get; set; }
         /// <summary>
         /// Список промежуточных сущностей "Избранные"
         /// </summary>

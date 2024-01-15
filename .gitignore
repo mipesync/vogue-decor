@@ -3,7 +3,7 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-vogue-decor/wwwroot/*
+vogue-decor.API/wwwroot/*
 
 .env
 .idea

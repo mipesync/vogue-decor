@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using NpgsqlTypes;
@@ -13,9 +14,11 @@ using vogue_decor.Persistence;
 namespace vogue_decor.Persistence.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class DBContextModelSnapshot : ModelSnapshot
+    [Migration("20240114164431_Add ChandelierType")]
+    partial class AddChandelierType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -932,27 +935,27 @@ namespace vogue_decor.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Металлический"
+                            Name = "Металл"
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Стеклянный"
+                            Name = "Стекло"
                         },
                         new
                         {
                             Id = 3,
-                            Name = "Деревянный"
+                            Name = "Дерево"
                         },
                         new
                         {
                             Id = 4,
-                            Name = "Смешанный"
+                            Name = "Смешанное"
                         },
                         new
                         {
                             Id = 5,
-                            Name = "Шёлковый"
+                            Name = "Шёлк"
                         },
                         new
                         {
@@ -962,12 +965,12 @@ namespace vogue_decor.Persistence.Migrations
                         new
                         {
                             Id = 7,
-                            Name = "Шерстяной"
+                            Name = "Шерсть"
                         },
                         new
                         {
                             Id = 8,
-                            Name = "Вискозный"
+                            Name = "Вискоза"
                         },
                         new
                         {
@@ -986,6 +989,11 @@ namespace vogue_decor.Persistence.Migrations
                         },
                         new
                         {
+                            Id = 12,
+                            Name = "Стеклянный"
+                        },
+                        new
+                        {
                             Id = 13,
                             Name = "Бумажный"
                         },
@@ -997,7 +1005,7 @@ namespace vogue_decor.Persistence.Migrations
                         new
                         {
                             Id = 15,
-                            Name = "Гипсовый"
+                            Name = "Гипс"
                         },
                         new
                         {
