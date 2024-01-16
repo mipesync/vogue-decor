@@ -27,5 +27,10 @@ namespace vogue_decor.Application.Common.Exceptions
         /// </summary>
         /// <param name="product">Товар</param>
         public NotFoundException(Product? product) : base("Товар не найден") { }
+        /// <summary>
+        /// Инициализация исключения с сообщением отсутсвия бренда
+        /// </summary>
+        /// <param name="brand">Бренд</param>
+        public NotFoundException(Brand? brand) : base("Бренд не найден") { }
     }
 }

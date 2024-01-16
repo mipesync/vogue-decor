@@ -1,6 +1,10 @@
-﻿using System.Linq.Expressions;
+﻿using System.Globalization;
+using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using NpgsqlTypes;
 using vogue_decor.Application.Common.Exceptions;
 using vogue_decor.Application.Common.Services;
 using vogue_decor.Application.DTOs.ProductDTOs;
@@ -9,9 +13,6 @@ using vogue_decor.Application.Interfaces;
 using vogue_decor.Application.Interfaces.Repositories;
 using vogue_decor.Domain;
 using vogue_decor.Domain.Enums;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using NpgsqlTypes;
 using File = System.IO.File;
 
 namespace vogue_decor.Application.Repositories
@@ -27,23 +28,34 @@ namespace vogue_decor.Application.Repositories
         private readonly IFileParser _fileParser;
         private readonly UserManager<User> _userManager;
         private readonly IFileUploader _uploader;
+        private readonly IProductCodeGenerator _codeGenerator;
 
         public ProductsRepository(IDBContext dbContext, IMapper mapper,
-            IFileParser fileParser, UserManager<User> userManager, IFileUploader uploader)
+            IFileParser fileParser, UserManager<User> userManager, IFileUploader uploader, IProductCodeGenerator codeGenerator)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _fileParser = fileParser;
             _userManager = userManager;
             _uploader = uploader;
+            _codeGenerator = codeGenerator;
         }
 
-        public async Task<CreateProductResponseDto> Create(CreateProductDto dto, string webRootPath, string hostUrl) 
+        public async Task<CreateProductResponseDto> Create(CreateProductDto dto, string webRootPath, string hostUrl)
         {
+            var brand = await GetBrandByIdAsync(dto.BrandId);
+            var colors = await GetColorsByIdAsync(dto.Colors);
+
+            await GetCategoriesByIdAsync(dto.Categories);
+            
             var product = _mapper.Map<Product>(dto);
             product.PublicationDate = DateTime.UtcNow;
             product.SearchVector = NpgsqlTsVector.Parse(product.Name);
-
+            product.Code = _codeGenerator.GenerateCode(product.Name, brand.Name, 
+                product.PublicationDate.ToString(CultureInfo.CurrentCulture), product.ProductType.ToString(), 
+                product.Article, ParseFilterNameToString(colors.Select(c => c.Name)));
+            product.Brand = brand;
+            
             var urls = product.Urls.ToArray();
             product.Urls.Clear();
             
@@ -681,6 +693,47 @@ namespace vogue_decor.Application.Repositories
         private string NormalizeQuery(string query)
         {
             return query.Replace(" ", " & ");
+        }
+
+        private async Task<Brand> GetBrandByIdAsync(Guid brandId)
+        {
+            var brand = await _dbContext.Brands.FirstOrDefaultAsync(b => b.Id == brandId);
+
+            if (brand is null)
+                throw new NotFoundException(brand);
+
+            return brand;
+        }
+
+        private async Task<List<Color>> GetColorsByIdAsync(IReadOnlyCollection<int> colorIds)
+        {
+            var colors = await _dbContext.Colors.Where(c => colorIds.Contains(c.Id)).ToListAsync();
+
+            if (colors.Count == 0)
+                throw new NotFoundException("Ни один цвет не был найден");
+
+            if (colors.Count != colorIds.Count)
+                throw new NotFoundException("Один или несколько цветов не были найдены");
+
+            return colors;
+        }
+        
+        private async Task<List<Category>> GetCategoriesByIdAsync(IReadOnlyCollection<int> categoryIds)
+        {
+            var categories = await _dbContext.Categories.Where(c => categoryIds.Contains(c.Id)).ToListAsync();
+
+            if (categories.Count == 0)
+                throw new NotFoundException("Ни одна категория не была найдена");
+
+            if (categories.Count != categoryIds.Count)
+                throw new NotFoundException("Одна или несколько категорий не были найдены");
+
+            return categories;
+        }
+
+        private string ParseFilterNameToString(IEnumerable<string> names)
+        {
+            return string.Join(",", names);
         }
     }
 }

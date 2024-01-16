@@ -16,9 +16,9 @@ namespace vogue_decor.Application.Common.Services
     {
         public async Task<ProductsParserDto> ParseAsync(IFormFile file)
         {
-            XDocument xml = new XDocument();
+            XDocument xml;
 
-            using (MemoryStream str = new MemoryStream())
+            using (var str = new MemoryStream())
             {
                 await file.CopyToAsync(str);
                 str.Position = 0;
@@ -26,8 +26,8 @@ namespace vogue_decor.Application.Common.Services
             }
 
             var reader = new StringReader(xml.ToString());
-            XmlSerializer l_serializer = new XmlSerializer(typeof(ProductsParserDto));
-            var products = (ProductsParserDto)l_serializer.Deserialize(reader)!;
+            var lSerializer = new XmlSerializer(typeof(ProductsParserDto));
+            var products = (ProductsParserDto)lSerializer.Deserialize(reader)!;
             
             return products;
         }
@@ -45,5 +45,5 @@ namespace vogue_decor.Application.Common.Services
         /// </summary>
         [XmlElement("product")]
         public List<CreateProductDto> ProductList { get; set; } = new ();
-    }   
+    } 
 }

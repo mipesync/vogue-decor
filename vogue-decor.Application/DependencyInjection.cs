@@ -11,7 +11,7 @@ namespace vogue_decor.Application
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddApplication(this IServiceCollection services, 
+        public static void AddApplication(this IServiceCollection services,
             JwtOptionsDto jwtOptions)
         {
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
@@ -23,13 +23,12 @@ namespace vogue_decor.Application
             services.AddTransient<IFiltersRepository, FiltersRepository>();
             services.AddTransient<IFilesRepository, FilesRepository>();
             services.AddScoped<IFileParser, FileParser>();
+            services.AddScoped<IProductCodeGenerator, ProductCodeGenerator>();
 
             var dbContext = services.BuildServiceProvider().GetService<IDBContext>();
 
             if (dbContext is not null)
                 services.AddTransient<ITokenManager>(x => new TokenManager(jwtOptions));
-
-            return services;
         }
     }
 }

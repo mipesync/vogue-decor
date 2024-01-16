@@ -24,11 +24,12 @@ namespace vogue_decor.Domain
         /// <summary>
         /// Тип товара
         /// </summary>
+        [XmlElement("productType")]
         public int ProductType { get; set; }
         /// <summary>
         /// Тип конкретного товара
         /// </summary>
-        [XmlElement("type")]
+        [XmlElement("categories")]
         public int[] Types { get; set; } = null!;
         
         [XmlElement("article")]

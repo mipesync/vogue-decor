@@ -1,5 +1,8 @@
-﻿using System.Xml.Serialization;
-using vogue_decor.Domain.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Xml.Serialization;
+using Microsoft.AspNetCore.Http;
+using vogue_decor.Application.Common.Attributes;
+using vogue_decor.Domain.Interfaces.ProductFields;
 
 namespace vogue_decor.Application.DTOs.ProductDTOs
 {
@@ -8,97 +11,142 @@ namespace vogue_decor.Application.DTOs.ProductDTOs
     /// </summary>
     [Serializable]
     [XmlRoot("product")]
-    public class CreateProductDto
+    public class CreateProductDto : IDimensions, IDiameter, IPictureMaterial, IIndent
     {
         /// <summary>
         /// Название товара
         /// </summary>
         [XmlElement("name")]
-        public string Name { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Название товара обязательно")]
+        public string Name { get; set; } = null!;
+        
         /// <summary>
         /// Описание товара
         /// </summary>
         [XmlElement("description")]
-        public string Description { get; set; } = string.Empty;
+        public string? Description { get; set; }
+        
         /// <summary>
         /// Тип товара
         /// </summary>
-        [XmlElement("type")]
-        public ProductTypes Type { get; set; } = ProductTypes.NONE;
+        [XmlElement("productType")]
+        [Required(ErrorMessage = "Тип товара обязателен")]
+        public int Type { get; set; }
+        
         /// <summary>
-        /// Артикль товара
+        /// Категории товара
+        /// </summary>
+        [XmlElement("categories")]
+        [Required(ErrorMessage = "Категория(-и) товара обязательна(-ы)")]
+        public int[] Categories { get; set; } = null!;
+        
+        /// <summary>
+        /// Артикул товара
         /// </summary>
         [XmlElement("article")]
-        public string Article { get; set; } = string.Empty;
+        [Required(ErrorMessage = "Артикул товара обязателен")]
+        public string Article { get; set; } = null!;
+        
         /// <summary>
         /// Цена товара
         /// </summary>
         [XmlElement("price")]
-        public decimal Price { get; set; } = 0m;
+        [Required(ErrorMessage = "Цена товара обязательна")]
+        public decimal Price { get; set; }
+        
         /// <summary>
-        /// Цвет товара
+        /// Список цветов товара
         /// </summary>
         [XmlElement("color")]
-        public int[]? Colors { get; set; }
+        [Required(ErrorMessage = "Цвет(-а) обязателен(-ы)")]
+        public int[] Colors { get; set; } = null!;
+        
         /// <summary>
-        /// Диаметр товара
+        /// Скидка на товар
         /// </summary>
-        [XmlElement("diameter")]
-        public int Diameter { get; set; } = 0;
-        /// <summary>
-        /// Высота товара
-        /// </summary>
-        [XmlElement("heigth")]
-        public int Height { get; set; } = 0;
-        /// <summary>
-        /// Длина товара
-        /// </summary>
-        [XmlElement("length")]
-        public int Length { get; set; } = 0;
-        /// <summary>
-        /// Ширина товара
-        /// </summary>
-        [XmlElement("width")]
-        public int Width { get; set; } = 0;
-        /// <summary>
-        /// Скидка товара
-        /// </summary>
+        /// <remarks>Указывается в процентах</remarks>
         [XmlElement("discount")]
-        public int Discount { get; set; } = 0;
+        public uint? Discount { get; set; }
+        
         /// <summary>
-        /// Тип люстры
+        /// Стиль товара
         /// </summary>
-        [XmlElement("chandelierTypes")]
-        public int[]? ChandelierTypes { get; set; }
+        [XmlElement("styles")]
+        public int[]? Styles { get; set; }
+        
         /// <summary>
-        /// Цоколь лампочки
+        /// Материал товара
         /// </summary>
-        [XmlElement("plinth")]
-        public string Plinth { get; set; } = string.Empty;
-        /// <summary>
-        /// Количество лампочек
-        /// </summary>
-        [XmlElement("lampCount")]
-        public int LampCount { get; set; } = 0;
-        /// <summary>
-        /// Рейтинг товара
-        /// </summary>
-        [XmlElement("rating")]
-        public int Rating { get; set; } = 0;
+        [XmlElement("materials")]
+        public int[]? Materials { get; set; }
+        
         /// <summary>
         /// Наличие товара
         /// </summary>
         [XmlElement("availability")]
-        public int Availability { get; set; } = 0;
+        [Required(ErrorMessage = "Наличие товара обязательно")]
+        public int Availability { get; set; }
+        
         /// <summary>
-        /// Идентификатор коллекции
+        /// Идентификатор бренда
+        /// </summary>
+        [XmlElement("brandId")]
+        [Required(ErrorMessage = "Идентификатор бренда обязателен")]
+        public Guid BrandId { get; set; }
+        
+        /// <summary>
+        /// Идентификатор колекции
         /// </summary>
         [XmlElement("collectionId")]
-        public Guid CollectionId { get; set; } = Guid.Empty;
+        public Guid? CollectionId { get; set; }
+        
         /// <summary>
-        /// Ссылки на изображения
+        /// Список ссылок на изображения
         /// </summary>
         [XmlElement("urls")]
         public List<string>? Urls { get; set; }
+        
+        /// <summary>
+        /// Список файлов на изображения
+        /// </summary>
+        [XmlIgnore]
+        [ExtensionValidator(Extensions = "jpg,jpeg,png")]
+        public List<IFormFile>? Files { get; set; }
+        
+        [XmlElement("height")]
+        public decimal? Height { get; set; }
+        
+        [XmlElement("length")]
+        public decimal? Length { get; set; }
+        
+        [XmlElement("width")]
+        public decimal? Width { get; set; }
+        
+        [XmlElement("diameter")]
+        public decimal? Diameter { get; set; }
+        
+        [XmlElement("pictureMaterial")]
+        public int[]? PictureMaterial { get; set; }
+        
+        [XmlElement("indent")]
+        public decimal? Indent { get; set; }
+        
+        /// <summary>
+        /// Количество лампочек
+        /// </summary>
+        [XmlElement("lampCount")]
+        public int? LampCount { get; set; }
+        
+        /// <summary>
+        /// Цоколь лампочек
+        /// </summary>
+        [XmlElement("plinth")]
+        public string? Plinth { get; set; }
+        
+        /// <summary>
+        /// Список типов люстры
+        /// </summary>
+        [XmlElement("chandelierTypes")]
+        public int[]? ChandelierTypes { get; set; }
     }
 }

@@ -17,7 +17,9 @@ namespace vogue_decor.Application.Common.Mappings.MappingProfiles
         public ProductMappingProfile()
         {
             CreateMap<CreateProductDto, Product>(MemberList.Source)
-                .ForMember(product => product.Id, opt => Guid.NewGuid());
+                .ForMember(product => product.Id, opt => Guid.NewGuid())
+                .ForMember(product => product.ProductType, opt => opt.MapFrom(dto => dto.Type))
+                .ForMember(product => product.Types, opt => opt.MapFrom(dto => dto.Categories));
 
             CreateMap<UpdateProductDto, Product>(MemberList.Source)
                 .ForMember(product => product.Id, opt => opt.MapFrom(u => u.ProductId))
