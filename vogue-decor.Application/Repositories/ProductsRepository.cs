@@ -13,6 +13,7 @@ using vogue_decor.Application.Interfaces;
 using vogue_decor.Application.Interfaces.Repositories;
 using vogue_decor.Domain;
 using vogue_decor.Domain.Enums;
+using vogue_decor.Domain.Interfaces;
 using File = System.IO.File;
 
 namespace vogue_decor.Application.Repositories
@@ -41,9 +42,12 @@ namespace vogue_decor.Application.Repositories
             _codeGenerator = codeGenerator;
         }
 
-        public async Task<CreateProductResponseDto> Create(CreateProductDto dto, string webRootPath, string hostUrl)
+        public async Task<CreateProductResponseDto> CreateAsync(CreateProductDto dto, string webRootPath, string hostUrl)
         {
-            var brand = await GetBrandByIdAsync(dto.BrandId);
+            var brand = GetBrandsByIdAsync(new [] { dto.BrandId }).Result.FirstOrDefault();
+            if (brand is null)
+                throw new NotFoundException(brand);
+            
             var colors = await GetColorsByIdAsync(dto.Colors);
 
             await GetCategoriesByIdAsync(dto.Categories);
@@ -63,19 +67,19 @@ namespace vogue_decor.Application.Repositories
             await _dbContext.SaveChangesAsync(CancellationToken.None);
             
             if (urls.Length > 0)
-                await UploadImage(new UploadImageDto { Urls = urls.ToList(), ProductId = product.Id}, webRootPath, hostUrl);
+                await UploadImageAsync(new UploadImageDto { Urls = urls.ToList(), ProductId = product.Id}, webRootPath, hostUrl);
 
             return new CreateProductResponseDto { ProductId = product.Id };
         }
 
-        public async Task<ImportProductsResponseDto> Import(ImportProductsDto dto, string webRootPath, string hostUrl)
+        public async Task<ImportProductsResponseDto> ImportAsync(ImportProductsDto dto, string webRootPath, string hostUrl)
         {
             var products = await _fileParser.ParseAsync(dto.File);
             var ids = new List<Guid>();
 
             foreach (var product in products.ProductList)
             {
-                var result = await Create(product, webRootPath, hostUrl);
+                var result = await CreateAsync(product, webRootPath, hostUrl);
                 ids.Add(result.ProductId);
             }
             
@@ -85,7 +89,7 @@ namespace vogue_decor.Application.Repositories
             };
         }
 
-        public async Task Update(UpdateProductDto dto)
+        public async Task UpdateAsync(UpdateProductDto dto)
         {
             var product = await _dbContext.Products
                 .AsNoTracking()
@@ -100,7 +104,7 @@ namespace vogue_decor.Application.Repositories
             await _dbContext.SaveChangesAsync(CancellationToken.None);
         }
 
-        public async Task Delete(DeleteProductDto dto)
+        public async Task DeleteAsync(DeleteProductDto dto)
         {
             var product = await _dbContext.Products
                 .FirstOrDefaultAsync(u => u.Id == dto.ProductId, CancellationToken.None);
@@ -112,7 +116,7 @@ namespace vogue_decor.Application.Repositories
             await _dbContext.SaveChangesAsync(CancellationToken.None);
         }
 
-        public async Task<GetProductsResponseDto> GetAll(GetAllProductsDto dto, string hostUrl)
+        public async Task<GetProductsResponseDto> GetAllAsync(GetAllProductsDto dto, string hostUrl)
         {
             var products = await _dbContext.Products
                 .AsNoTracking()
@@ -140,7 +144,7 @@ namespace vogue_decor.Application.Repositories
             };
         }
 
-        public async Task<ProductResponseDto> GetById(GetProductByIdDto dto, string hostUrl)
+        public async Task<ProductResponseDto> GetByIdAsync(GetProductByIdDto dto, string hostUrl)
         {
             var product = await _dbContext.Products
                 .AsNoTracking()
@@ -165,18 +169,11 @@ namespace vogue_decor.Application.Repositories
 
             return result;
         }
-
-        public async Task<GetProductsResponseDto> GetByCriteria(GetProductByCriteriaDto dto, 
+        
+        public async Task<GetProductsResponseDto> GetByCriteriaAsync(GetProductByCriteriaDto dto, 
             string hostUrl)
         {
-            Expression <Func<Product, bool>> filterExpression = u => 
-                (dto.Types == null || dto.Types.Contains(u.ProductType)) &&
-                (u.Price >= dto.MinPrice && u.Price <= dto.MaxPrice) &&
-                (dto.Colors == null || u.Colors.Any(c => dto.Colors.Contains(c))) &&
-                (u.Diameter >= dto.MinDiameter && u.Diameter <= dto.MaxDiameter) &&
-                (u.LampCount >= dto.MinLampCount && u.LampCount <= dto.MaxLampCount) &&
-                (dto.IsSale == null || u.Discount > 0 == dto.IsSale) &&
-                (dto.CollectionId == null || u.CollectionId == dto.CollectionId);
+            var filterExpression = BuildLinqExpression(dto);
             
             var products = await GetOrderedProductsAsync(sortType: dto.SortType, expression: filterExpression);
 
@@ -191,19 +188,49 @@ namespace vogue_decor.Application.Repositories
             return new GetProductsResponseDto 
             { 
                 Products = productsShort, 
-                TotalCount = products.Count(),
+                TotalCount = products.Count,
                 CartCount = counts.cart,
                 FavouritesCount = counts.favourites
             };
         }
+
+        public async Task<GetFiltersCountResponseDto> GetFiltersCountAsync(GetProductByCriteriaDto dto)
+        {
+            var filterExpression = BuildLinqExpression(dto);
+    
+            var products = await GetOrderedProductsAsync(sortType: dto.SortType, expression: filterExpression);
+
+            var result = new GetFiltersCountResponseDto 
+            { 
+                TotalCount = products.Count,
+                Colors = GetFiltersByColor(products),
+                ProductTypes = GetFiltersByProductType(products),
+                Categories = GetFiltersByCategory(products, dto.ProductTypes),
+                Styles = GetFiltersByStyle(products),
+                Prices = GetRangeFilterByPrice(products),
+                Length = GetRangeFilterByLength(products),
+                Diameter = GetRangeFilterByDiameter(products),
+                Height = GetRangeFilterByHeight(products),
+                Width = GetRangeFilterByWidth(products),
+                Indent = GetRangeFilterByIndent(products),
+                LampCount = GetRangeFilterByLampCount(products),
+                AdditionalParams = GetFiltersByAdditionalParams(products),
+                Materials = GetFiltersByMaterials(products),
+                PictureMaterial = GetFiltersByPictureMaterials(products),
+                Brands = GetFiltersByBrands(products),
+                Collections = GetFiltersByCollections(products)
+            };
+
+            return result;
+        }
         
-        public async Task<GetProductsResponseDto> GetByArticle(GetByArticleDto dto, string hostUrl)
+        public async Task<GetProductsResponseDto> GetByArticleAsync(GetByArticleDto dto, string hostUrl)
         {
             var products = await _dbContext.Products
                 .AsNoTracking()
                 .Include(u => u.Favourites)
                 .Include(u => u.ProductUsers)
-                .Where(u => u.Article.Contains(dto.Article)).ToListAsync();
+                .Where(u => u.Article.Contains(dto.Article)).ToListAsync(CancellationToken.None);
 
             var counts = GetCounts(dto.UserId);
 
@@ -224,7 +251,7 @@ namespace vogue_decor.Application.Repositories
             };
         }
 
-        public async Task<GetProductsResponseDto> GetByCollectionId(GetProductByCollectionIdDto dto,
+        public async Task<GetProductsResponseDto> GetByCollectionIdAsync(GetProductByCollectionIdDto dto,
             string hostUrl)
         {
             var products = await GetOrderedProductsAsync(sortType: dto.SortType);
@@ -251,7 +278,7 @@ namespace vogue_decor.Application.Repositories
             };
         }
         
-        public async Task<GetProductsResponseDto> Search(SearchProductDto dto, string hostUrl)
+        public async Task<GetProductsResponseDto> SearchAsync(SearchProductDto dto, string hostUrl)
         {
             var searchQuery = dto.SearchQuery.Trim();
             var article = FindArticle(dto.SearchQuery);
@@ -264,7 +291,7 @@ namespace vogue_decor.Application.Repositories
             {
                 if (article != string.Empty)
                 {
-                    var articleProducts = await GetByArticle(new GetByArticleDto
+                    var articleProducts = await GetByArticleAsync(new GetByArticleDto
                     {
                         Article = article,
                         UserId = dto.UserId
@@ -290,7 +317,7 @@ namespace vogue_decor.Application.Repositories
             };
         }
 
-        public async Task AddToCart(AddToCartDto dto)
+        public async Task AddToCartAsync(AddToCartDto dto)
         {
             var product = await _dbContext.Products.FirstOrDefaultAsync(
                 u => u.Id == dto.ProductId, CancellationToken.None);
@@ -313,7 +340,7 @@ namespace vogue_decor.Application.Repositories
             await _dbContext.SaveChangesAsync(CancellationToken.None);
         }
 
-        public async Task RemoveFromCart(RemoveFromCartDto dto)
+        public async Task RemoveFromCartAsync(RemoveFromCartDto dto)
         {
             var product = await _dbContext.Products.FirstOrDefaultAsync(
                 u => u.Id == dto.ProductId, CancellationToken.None);
@@ -345,7 +372,7 @@ namespace vogue_decor.Application.Repositories
             await _dbContext.SaveChangesAsync(CancellationToken.None);
         }
 
-        public async Task AddToFavourite(AddToFavouriteDto dto)
+        public async Task AddToFavouriteAsync(AddToFavouriteDto dto)
         {
             var product = await _dbContext.Products.FirstOrDefaultAsync(
                 u => u.Id == dto.ProductId, CancellationToken.None);
@@ -368,7 +395,7 @@ namespace vogue_decor.Application.Repositories
             await _dbContext.SaveChangesAsync(CancellationToken.None);
         }
 
-        public async Task RemoveFromFavourite(RemoveFromFavouriteDto dto)
+        public async Task RemoveFromFavouriteAsync(RemoveFromFavouriteDto dto)
         {
             var product = await _dbContext.Products.FirstOrDefaultAsync(
                 u => u.Id == dto.ProductId, CancellationToken.None);
@@ -391,7 +418,7 @@ namespace vogue_decor.Application.Repositories
             await _dbContext.SaveChangesAsync(CancellationToken.None);
         }
 
-        public async Task<UploadImageResponseDto> UploadImage(UploadImageDto dto,
+        public async Task<UploadImageResponseDto> UploadImageAsync(UploadImageDto dto,
             string webRootPath, string hostUrl)
         {
             var product = await _dbContext.Products
@@ -447,7 +474,7 @@ namespace vogue_decor.Application.Repositories
             return result;
         }
 
-        public async Task RemoveImage(RemoveImageDto dto, string webRootPath)
+        public async Task RemoveImageAsync(RemoveImageDto dto, string webRootPath)
         {
             var product = await _dbContext.Products
                 .FirstOrDefaultAsync(u => u.Id == dto.ProductId, CancellationToken.None);
@@ -469,7 +496,7 @@ namespace vogue_decor.Application.Repositories
             await _dbContext.SaveChangesAsync(CancellationToken.None);
         }
 
-        public async Task<ProductsCountResponseDto> GetCount(GetProductsCountDto dto)
+        public async Task<ProductsCountResponseDto> GetCountAsync(GetProductsCountDto dto)
         {
             Expression<Func<Product, bool>> defaultExpression = u => 
                 (dto.Types == null || dto.Types.Contains(u.ProductType)) &&
@@ -503,7 +530,7 @@ namespace vogue_decor.Application.Repositories
             return new ProductsCountResponseDto { Count = productsCount };
         }
 
-        public async Task SetFileOrder(SetFileOrderDto dto)
+        public async Task SetFileOrderAsync(SetFileOrderDto dto)
         {
             var product = await _dbContext.Products
                 .FirstOrDefaultAsync(u => u.Id == dto.ProductId, CancellationToken.None);
@@ -568,24 +595,6 @@ namespace vogue_decor.Application.Repositories
             }
 
             return enums.ToArray();
-        }
-
-        private async Task<int[]> GetColorsIdFromDbAsync(string query)
-        {
-            var colors = await _dbContext.Colors.AsNoTracking()
-                .Where(u => u.SearchVector.Matches(query))
-                .Select(u => u.Id).ToArrayAsync();
-
-            return colors;
-        }
-
-        private async Task<int[]> GetProdTypesIdFromDbAsync(string query)
-        {
-            var types = await _dbContext.ProductTypes.AsNoTracking()
-                .Where(u => u.SearchVector.Matches(query))
-                .Select(u => u.Id).ToArrayAsync();
-
-            return types;
         }
 
         private string FindArticle(string query)
@@ -695,14 +704,9 @@ namespace vogue_decor.Application.Repositories
             return query.Replace(" ", " & ");
         }
 
-        private async Task<Brand> GetBrandByIdAsync(Guid brandId)
+        private async Task<List<Brand>> GetBrandsByIdAsync(Guid[] brandsId)
         {
-            var brand = await _dbContext.Brands.FirstOrDefaultAsync(b => b.Id == brandId);
-
-            if (brand is null)
-                throw new NotFoundException(brand);
-
-            return brand;
+            return await _dbContext.Brands.Where(b => brandsId.Contains(b.Id)).ToListAsync();
         }
 
         private async Task<List<Color>> GetColorsByIdAsync(IReadOnlyCollection<int> colorIds)
@@ -731,9 +735,148 @@ namespace vogue_decor.Application.Repositories
             return categories;
         }
 
+
+        private static Expression<Func<Product, bool>> BuildLinqExpression(GetProductByCriteriaDto dto)
+        {
+            return u => 
+                (dto.Colors == null || u.Colors.Any(c => dto.Colors.Contains(c))) &&
+                (dto.ProductTypes == null || dto.ProductTypes.Contains(u.ProductType)) &&
+                (dto.Categories == null || u.Types.Any(c => dto.Categories.Contains(c))) &&
+                (dto.Styles == null || u.Styles == null || u.Styles.Any(c => dto.Styles.Contains(c))) &&
+                (dto.Prices == null || u.Price >= dto.Prices.MinValue && u.Price <= dto.Prices.MaxValue) &&
+                (dto.Length == null || u.Length >= dto.Length.MinValue && u.Length <= dto.Length.MaxValue) &&
+                (dto.Diameter == null || u.Diameter >= dto.Diameter.MinValue && u.Diameter <= dto.Diameter.MaxValue) &&
+                (dto.Height == null || u.Height >= dto.Height.MinValue && u.Height <= dto.Height.MaxValue) &&
+                (dto.Width == null || u.Width >= dto.Width.MinValue && u.Width <= dto.Width.MaxValue) &&
+                (dto.Indent == null || u.Indent >= dto.Indent.MinValue && u.Indent <= dto.Indent.MaxValue) &&
+                (dto.LampCount == null || u.LampCount >= dto.LampCount.MinValue && u.LampCount <= dto.LampCount.MaxValue) &&
+                (u.ChandelierTypes == null || dto.AdditionalParams == null || u.ChandelierTypes.Any(c => dto.AdditionalParams.Contains(c))) &&
+                (u.Materials == null || dto.Materials == null || u.Materials.Any(c => dto.Materials.Contains(c))) &&
+                (u.PictureMaterial == null || dto.PictureMaterial == null || u.PictureMaterial.Any(c => dto.PictureMaterial.Contains(c))) &&
+                (dto.IsSale == null || u.Discount > 0 == dto.IsSale || u.Discount != null == dto.IsSale) &&
+                (dto.BrandsId == null || dto.BrandsId.Contains(u.BrandId)) &&
+                (dto.CollectionsId == null || dto.CollectionsId.Contains((Guid)u.CollectionId!));
+        }
+
         private string ParseFilterNameToString(IEnumerable<string> names)
         {
             return string.Join(",", names);
+        }
+        
+        private Dictionary<int, GetFiltersCountResponseDto.FilterDto> GetFiltersByColor(IEnumerable<Product> products)
+        {
+            return GetFiltersByCriteria(products, p => p.Colors, _dbContext.Colors.AsNoTracking());
+        }
+
+        private Dictionary<int, GetFiltersCountResponseDto.FilterDto> GetFiltersByProductType(IEnumerable<Product> products)
+        {
+            return GetFiltersByCriteria(products, p => new[] { p.ProductType }, _dbContext.ProductTypes.AsNoTracking());
+        }
+
+        private Dictionary<int, GetFiltersCountResponseDto.FilterDto> GetFiltersByCategory(IEnumerable<Product> products, int[]? productTypes)
+        {
+            var categories = productTypes is not null
+                ? _dbContext.Categories.AsNoTracking().Where(c => productTypes.Cast<int?>().Contains(c.ProductTypeId))
+                : _dbContext.Categories.AsNoTracking();
+
+            return GetFiltersByCriteria(products, p => p.Types, categories);
+        }
+
+        private Dictionary<int, GetFiltersCountResponseDto.FilterDto> GetFiltersByStyle(IEnumerable<Product> products)
+        {
+            return GetFiltersByCriteria(products, p => p.Styles ?? Enumerable.Empty<int>(), _dbContext.Styles.AsNoTracking());
+        }
+
+        private Dictionary<int, GetFiltersCountResponseDto.FilterDto> GetFiltersByAdditionalParams(IEnumerable<Product> products)
+        {
+            return GetFiltersByCriteria(products, p => p.ChandelierTypes ?? Enumerable.Empty<int>(), _dbContext.ChandelierTypes.AsNoTracking());
+        }
+
+        private Dictionary<int, GetFiltersCountResponseDto.FilterDto> GetFiltersByMaterials(IEnumerable<Product> products)
+        {
+            return GetFiltersByCriteria(products, p => p.Materials ?? Enumerable.Empty<int>(), _dbContext.Materials.AsNoTracking());
+        }
+
+        private Dictionary<int, GetFiltersCountResponseDto.FilterDto> GetFiltersByPictureMaterials(IEnumerable<Product> products)
+        {
+            return GetFiltersByCriteria(products, p => p.PictureMaterial ?? Enumerable.Empty<int>(), _dbContext.Materials.AsNoTracking());
+        }
+
+        private Dictionary<int, GetFiltersCountResponseDto.FilterDto> GetFiltersByCriteria<T>(
+            IEnumerable<Product> products, 
+            Func<Product, IEnumerable<int>> productSelector, 
+            IQueryable<T> criteria) where T : IBaseFilterItem
+        {
+            return criteria
+                .AsEnumerable()
+                .Select(c => new { Id = c.Id, Name = c.Name, Count = products.Count(p => productSelector(p).Contains(c.Id)) })
+                .Where(x => x.Count > 0)
+                .ToDictionary(x => x.Id, x => new GetFiltersCountResponseDto.FilterDto { Count = x.Count, Name = x.Name });
+        }
+
+        private Dictionary<Guid, GetFiltersCountResponseDto.FilterDto> GetFiltersByBrands(IEnumerable<Product> products)
+        {
+            return GetFiltersBySecondaryEntities(products, p => p.BrandId, _dbContext.Brands.AsNoTracking());
+        }
+
+        private Dictionary<Guid, GetFiltersCountResponseDto.FilterDto> GetFiltersByCollections(IEnumerable<Product> products)
+        {
+            return GetFiltersBySecondaryEntities(products, p => (Guid)p.CollectionId!, _dbContext.Collections.AsNoTracking());
+        }
+
+        private Dictionary<Guid, GetFiltersCountResponseDto.FilterDto> GetFiltersBySecondaryEntities<T>(
+            IEnumerable<Product> products, 
+            Func<Product, Guid> productSelector, 
+            IQueryable<T> criteria) where T : ISecondaryEntity
+        {
+            return criteria
+                .AsEnumerable()
+                .Select(c => new { Id = c.Id, Name = c.Name, Count = products.Count(p => productSelector(p) == c.Id) })
+                .Where(x => x.Count > 0)
+                .ToDictionary(x => x.Id, x => new GetFiltersCountResponseDto.FilterDto { Count = x.Count, Name = x.Name });
+        }
+
+        private RangeFilterDto? GetRangeFilterByPrice(IEnumerable<Product> products)
+        {
+            return GetRangeFilterByCriteria<decimal>(products, p => p.Price);
+        }
+
+        private RangeFilterDto? GetRangeFilterByLength(IEnumerable<Product> products)
+        {
+            return GetRangeFilterByCriteria(products, p => p.Length);
+        }
+
+        private RangeFilterDto? GetRangeFilterByDiameter(IEnumerable<Product> products)
+        {
+            return GetRangeFilterByCriteria(products, p => p.Diameter);
+        }
+
+        private RangeFilterDto? GetRangeFilterByHeight(IEnumerable<Product> products)
+        {
+            return GetRangeFilterByCriteria(products, p => p.Height);
+        }
+
+        private RangeFilterDto? GetRangeFilterByWidth(IEnumerable<Product> products)
+        {
+            return GetRangeFilterByCriteria(products, p => p.Width);
+        }
+
+        private RangeFilterDto? GetRangeFilterByIndent(IEnumerable<Product> products)
+        {
+            return GetRangeFilterByCriteria(products, p => p.Indent);
+        }
+
+        private RangeFilterDto? GetRangeFilterByLampCount(IEnumerable<Product> products)
+        {
+            return GetRangeFilterByCriteria(products, p => p.LampCount);
+        }
+
+        private RangeFilterDto? GetRangeFilterByCriteria<T>(IEnumerable<Product> products, Func<Product, T?> productSelector) where T : struct
+        {
+            var values = products.Select(productSelector).Where(v => v is not null).Cast<T>().ToArray();
+            return values.Any()
+                ? new RangeFilterDto { MinValue = Convert.ToDecimal(values.Min()), MaxValue = Convert.ToDecimal(values.Max()) }
+                : null;
         }
     }
 }

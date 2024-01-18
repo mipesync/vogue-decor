@@ -1,21 +1,14 @@
-﻿namespace vogue_decor.Domain;
+﻿using vogue_decor.Domain.Interfaces;
+
+namespace vogue_decor.Domain;
 
 /// <summary>
 /// Класс бренда
 /// </summary>
-public class Brand
+public class Brand : ISecondaryEntity
 {
-    /// <summary>
-    /// Идентификатор бренда
-    /// </summary>
     public Guid Id { get; set; }
-    /// <summary>
-    /// Название бренда
-    /// </summary>
     public string Name { get; set; } = null!;
-    /// <summary>
-    /// Ссылка на обложку бренда
-    /// </summary>
     public string Url { get; set; } = null!;
     
     /// <summary>

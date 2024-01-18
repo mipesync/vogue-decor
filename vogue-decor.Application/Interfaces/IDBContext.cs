@@ -70,6 +70,10 @@ namespace vogue_decor.Application.Interfaces
         /// Получить/установаить список стилей
         /// </summary>
         DbSet<Style> Styles { get; set; }
+        /// <summary>
+        /// Получить/установаить список типов люстр
+        /// </summary>
+        DbSet<Style> ChandelierTypes { get; set; }
 
         /// <summary>
         ///     Ассинхронно сохраняет сделанные изменения

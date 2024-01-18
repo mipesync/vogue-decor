@@ -71,13 +71,13 @@ namespace vogue_decor.Application.DTOs.ProductDTOs
         /// <summary>
         /// Стиль товара
         /// </summary>
-        [XmlElement("styles")]
+        [XmlElement("style")]
         public int[]? Styles { get; set; }
         
         /// <summary>
         /// Материал товара
         /// </summary>
-        [XmlElement("materials")]
+        [XmlElement("material")]
         public int[]? Materials { get; set; }
         
         /// <summary>
@@ -99,12 +99,13 @@ namespace vogue_decor.Application.DTOs.ProductDTOs
         /// </summary>
         [XmlElement("collectionId")]
         public Guid? CollectionId { get; set; }
-        
+
         /// <summary>
         /// Список ссылок на изображения
         /// </summary>
-        [XmlElement("urls")]
-        public List<string>? Urls { get; set; }
+        [XmlElement("url")]
+        [Required(ErrorMessage = "Ссылки на фото товара обязательны")]
+        public List<string> Urls { get; set; } = null!;
         
         /// <summary>
         /// Список файлов на изображения
@@ -146,7 +147,7 @@ namespace vogue_decor.Application.DTOs.ProductDTOs
         /// <summary>
         /// Список типов люстры
         /// </summary>
-        [XmlElement("chandelierTypes")]
+        [XmlElement("chandelierType")]
         public int[]? ChandelierTypes { get; set; }
     }
 }

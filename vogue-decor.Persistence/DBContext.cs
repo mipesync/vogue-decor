@@ -31,6 +31,7 @@ namespace vogue_decor.Persistence
         public DbSet<ProductMaterial> ProductMaterials { get; set; }
         public DbSet<ProductStyle> ProductStyles { get; set; }
         public DbSet<Style> Styles { get; set; }
+        public DbSet<Style> ChandelierTypes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

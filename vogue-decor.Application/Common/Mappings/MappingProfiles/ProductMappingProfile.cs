@@ -35,13 +35,21 @@ namespace vogue_decor.Application.Common.Mappings.MappingProfiles
                 .ForMember(dest => dest.Width, opt => opt.Condition(u => u.Width != null))
                 .ForMember(dest => dest.Plinth, opt => opt.Condition(u => !u.Plinth.IsNullOrEmpty()))
                 .ForMember(dest => dest.LampCount, opt => opt.Condition(u => u.LampCount != null))
-                .ForMember(dest => dest.Rating, opt => opt.Condition(u => u.Rating != null))
                 .ForMember(dest => dest.Availability, opt => opt.Condition(u => u.Availability != null))
-                .ForMember(dest => dest.CollectionId, opt => opt.Condition(u => u.CollectionId != null));
+                .ForMember(dest => dest.CollectionId, opt => opt.Condition(u => u.CollectionId != null))
+                .ForMember(dest => dest.Types, opt => opt.Condition(u => u.Categories != null))
+                .ForMember(dest => dest.Discount, opt => opt.Condition(u => u.Discount != null))
+                .ForMember(dest => dest.Styles, opt => opt.Condition(u => u.Styles != null))
+                .ForMember(dest => dest.Materials, opt => opt.Condition(u => u.Materials != null))
+                .ForMember(dest => dest.BrandId, opt => opt.Condition(u => u.BrandId != null))
+                .ForMember(dest => dest.PictureMaterial, opt => opt.Condition(u => u.PictureMaterial != null))
+                .ForMember(dest => dest.Indent, opt => opt.Condition(u => u.Indent != null))
+                .ForMember(dest => dest.ChandelierTypes, opt => opt.Condition(u => u.ChandelierTypes != null));
 
             CreateMap<Product, ProductShortResponseDto>(MemberList.Source)
+                .ForMember(dto => dto.IsSale, opt => opt.MapFrom((product, _, _, _) => product.Discount is not (0 or null)))
                 .ForMember(dto => dto.IsFavourite, opt =>
-                    opt.MapFrom((product, dto, isFavourite, context) =>
+                    opt.MapFrom((product, _, _, context) =>
                     {
                         if (Guid.Parse(context.Items["userId"].ToString()!) == Guid.Empty)
                             return false;

@@ -1,22 +1,15 @@
-﻿namespace vogue_decor.Domain
+﻿using vogue_decor.Domain.Interfaces;
+
+namespace vogue_decor.Domain
 {
     /// <summary>
     /// Класс коллекции
     /// </summary>
-    public class Collection
+    public class Collection : ISecondaryEntity
     {
-        /// <summary>
-        /// Идентификатор коллекции
-        /// </summary>
-        public Guid Id { get; set; } = Guid.Empty;
-        /// <summary>
-        /// Название коллекции
-        /// </summary>
-        public string Name { get; set; } = string.Empty;
-        /// <summary>
-        /// Обложка коллекции
-        /// </summary>
-        public string Preview { get; set; } = string.Empty;
+        public Guid Id { get; set; }
+        public string Name { get; set; } = null!;
+        public string Url { get; set; } = null!;
         /// <summary>
         /// Порядок коллекции
         /// </summary>

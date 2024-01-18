@@ -29,17 +29,15 @@ namespace vogue_decor.Controllers
             get
             {
                 var claimNameId = Request.HttpContext.User.Claims.FirstOrDefault(u => u.Type == ClaimTypes.NameIdentifier);
-                if (claimNameId is null)
-                    return Guid.Empty;
-            
-                return Guid.Parse(claimNameId.Value);
+                return claimNameId is null ? Guid.Empty : Guid.Parse(claimNameId.Value);
             }
         }
 
         private string UrlRaw => $"{Request.Scheme}://{Request.Host}";
         private readonly IProductsRepository _productsRepository;
         private readonly IWebHostEnvironment _environment;
-        private const string WebRootPath = "/app/wwwroot";
+        //private const string WebRootPath = "/app/wwwroot";
+        private string WebRootPath => _environment.WebRootPath;
         
         /// <summary>
         /// Инициализация начальных параметров
@@ -66,7 +64,7 @@ namespace vogue_decor.Controllers
         [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
         public async Task<IActionResult> Create([FromBody] CreateProductDto dto)
         {
-            var result = await _productsRepository.Create(dto, WebRootPath, UrlRaw);
+            var result = await _productsRepository.CreateAsync(dto, WebRootPath, UrlRaw);
 
             return Ok(result);
         }
@@ -87,7 +85,7 @@ namespace vogue_decor.Controllers
         [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
         public async Task<IActionResult> ImportProducts([FromForm] ImportProductsDto dto)
         {
-            var result = await _productsRepository.Import(dto, WebRootPath, UrlRaw);
+            var result = await _productsRepository.ImportAsync(dto, WebRootPath, UrlRaw);
 
             return Ok(result);
         }
@@ -106,7 +104,7 @@ namespace vogue_decor.Controllers
         [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
         public async Task<IActionResult> Update([FromBody] UpdateProductDto dto)
         {
-            await _productsRepository.Update(dto);
+            await _productsRepository.UpdateAsync(dto);
 
             return Ok();
         }
@@ -125,7 +123,7 @@ namespace vogue_decor.Controllers
         [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
         public async Task<IActionResult> Delete([FromQuery] DeleteProductDto dto)
         {
-            await _productsRepository.Delete(dto);
+            await _productsRepository.DeleteAsync(dto);
 
             return Ok();
         }
@@ -164,7 +162,25 @@ namespace vogue_decor.Controllers
         public async Task<IActionResult> GetById([FromQuery] GetProductByIdDto dto)
         {
             dto.UserId = UserId;
-            var result = await _productsRepository.GetById(dto, UrlRaw);
+            var result = await _productsRepository.GetByIdAsync(dto, UrlRaw);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Получение количества товара и фильтров по критериям
+        /// </summary>
+        /// <param name="dto">Входные данные</param>
+        /// <returns><see cref="GetFiltersCountResponseDto"/></returns>
+        /// <response code="200">Запрос выполнен успешно</response>
+        /// <response code="500">Внутренняя ошибка сервера</response>
+        [HttpGet("filters-counts")]
+        [AllowAnonymous]
+        [SwaggerResponse(statusCode: StatusCodes.Status200OK, type: typeof(GetFiltersCountResponseDto))]
+        [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
+        public async Task<IActionResult> GetFiltersCounts([FromQuery] GetProductByCriteriaDto dto)
+        {
+            var result = await _productsRepository.GetFiltersCountAsync(dto);
 
             return Ok(result);
         }
@@ -183,7 +199,7 @@ namespace vogue_decor.Controllers
         public async Task<IActionResult> GetByCriteria([FromQuery] GetProductByCriteriaDto dto)
         {
             dto.UserId = UserId;
-            var result = await _productsRepository.GetByCriteria(dto, UrlRaw);
+            var result = await _productsRepository.GetByCriteriaAsync(dto, UrlRaw);
 
             return Ok(result);
         }
@@ -202,7 +218,7 @@ namespace vogue_decor.Controllers
         public async Task<IActionResult> GetByCollectionId([FromQuery] GetProductByCollectionIdDto dto)
         {
             dto.UserId = UserId;
-            var result = await _productsRepository.GetByCollectionId(dto, UrlRaw);
+            var result = await _productsRepository.GetByCollectionIdAsync(dto, UrlRaw);
 
             return Ok(result);
         }
@@ -223,7 +239,7 @@ namespace vogue_decor.Controllers
         public async Task<IActionResult> GetByArticle([FromQuery] GetByArticleDto dto)
         {
             dto.UserId = UserId;
-            var result = await _productsRepository.GetByArticle(dto, UrlRaw);
+            var result = await _productsRepository.GetByArticleAsync(dto, UrlRaw);
 
             return Ok(result);
         }
@@ -254,7 +270,7 @@ namespace vogue_decor.Controllers
                     UserId = dto.UserId
                 });
             }
-            var result = await _productsRepository.Search(dto, UrlRaw);
+            var result = await _productsRepository.SearchAsync(dto, UrlRaw);
 
             return Ok(result);
         }
@@ -274,7 +290,7 @@ namespace vogue_decor.Controllers
         public async Task<IActionResult> AddToCart([FromBody] AddToCartDto dto)
         {
             dto.UserId = UserId;
-            await _productsRepository.AddToCart(dto);
+            await _productsRepository.AddToCartAsync(dto);
 
             return Ok();
         }
@@ -294,7 +310,7 @@ namespace vogue_decor.Controllers
         public async Task<IActionResult> RemoveFromCart([FromBody] RemoveFromCartDto dto)
         {
             dto.UserId = UserId;
-            await _productsRepository.RemoveFromCart(dto);
+            await _productsRepository.RemoveFromCartAsync(dto);
 
             return Ok();
         }
@@ -314,7 +330,7 @@ namespace vogue_decor.Controllers
         public async Task<IActionResult> AddToFavourite([FromBody] AddToFavouriteDto dto)
         {
             dto.UserId = UserId;
-            await _productsRepository.AddToFavourite(dto);
+            await _productsRepository.AddToFavouriteAsync(dto);
 
             return Ok();
         }
@@ -334,7 +350,7 @@ namespace vogue_decor.Controllers
         public async Task<IActionResult> RemoveFromFavourite([FromBody] RemoveFromFavouriteDto dto)
         {
             dto.UserId = UserId;
-            await _productsRepository.RemoveFromFavourite(dto);
+            await _productsRepository.RemoveFromFavouriteAsync(dto);
 
             return Ok();
         }
@@ -361,7 +377,7 @@ namespace vogue_decor.Controllers
         [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
         public async Task<IActionResult> UploadImage([FromForm] UploadImageDto dto)
         {
-            var result = await _productsRepository.UploadImage(dto, WebRootPath, UrlRaw);
+            var result = await _productsRepository.UploadImageAsync(dto, WebRootPath, UrlRaw);
 
             return Ok(result);
         }
@@ -380,7 +396,7 @@ namespace vogue_decor.Controllers
         [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
         public async Task<IActionResult> RemoveImage([FromQuery] RemoveImageDto dto)
         {
-            await _productsRepository.RemoveImage(dto, WebRootPath);
+            await _productsRepository.RemoveImageAsync(dto, WebRootPath);
 
             return Ok();
         }
@@ -416,7 +432,7 @@ namespace vogue_decor.Controllers
         [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
         public async Task<IActionResult> SetFileOrder([FromBody] SetFileOrderDto dto)
         {
-            await _productsRepository.SetFileOrder(dto);
+            await _productsRepository.SetFileOrderAsync(dto);
 
             return Ok();
         }
