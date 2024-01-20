@@ -2,6 +2,8 @@
 using vogue_decor.Application.Common.Exceptions;
 using vogue_decor.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 
 namespace vogue_decor.Persistence.Services
 {
@@ -14,12 +16,14 @@ namespace vogue_decor.Persistence.Services
         public string WebRootPath { get; set; } = string.Empty;
 
         [Obsolete("Obsolete")]
-        public async Task<string> UploadFileAsync()
+        public async Task<string[]> UploadFileAsync()
         {
             string fileExtension;
             string fileNameHash;
             var fullName = string.Empty;
+            string smallFullName;
             string path;
+            string smallPath;
 
             Directory.CreateDirectory(Path.Combine(WebRootPath, AbsolutePath));
             
@@ -27,35 +31,47 @@ namespace vogue_decor.Persistence.Services
             {
                 fileExtension = Path.GetExtension(File.FileName);
                 fileNameHash = Guid.NewGuid().ToString();
-                fullName = fileNameHash + fileExtension;
+                fullName = $"{fileNameHash}_default{fileExtension}";
+                smallFullName = $"{fileNameHash}_small{fileExtension}";
                 path = Path.Combine(AbsolutePath, fullName);
+                smallPath = Path.Combine(AbsolutePath, smallFullName);
+                
+                using var image = await Image.LoadAsync(File.OpenReadStream());
           
-                await using var fileStream = new FileStream(Path.Combine(WebRootPath, path), FileMode.Create);
-                await File.CopyToAsync(fileStream);
+                /*await using var fileStream = new FileStream(Path.Combine(WebRootPath, path), FileMode.Create);
+                await File.CopyToAsync(fileStream);*/
+                await image.SaveAsync(Path.Combine(WebRootPath, path));
+                
+                image.Mutate(r => r.Resize(0, 350));
+                await image.SaveAsync(Path.Combine(WebRootPath, smallPath));
 
-                return fullName;
+                return new[] { fullName, smallFullName };
             }
             if (FileUrl is not null)
             {
-                fileExtension = ".jpg";
+                fileExtension = Path.GetExtension(FileUrl);
                 fileNameHash = Guid.NewGuid().ToString();
-                fullName = fileNameHash + fileExtension;
+                fullName = $"{fileNameHash}_default{fileExtension}";
+                smallFullName = $"{fileNameHash}_small{fileExtension}";
                 path = Path.Combine(AbsolutePath, fullName);
+                smallPath = Path.Combine(AbsolutePath, smallFullName);
 
-                using var client = new WebClient();
-                var fileData = client.DownloadData(FileUrl);
-
-                await using var fs = new FileStream(Path.Combine(WebRootPath, path), FileMode.Create);
-                await using var w = new BinaryWriter(fs);
-                w.Write(fileData);
+                using var client = new HttpClient();
+                await using var stream = await client.GetStreamAsync(FileUrl);
                 
-                return fullName;
+                using var image = await Image.LoadAsync(stream);
+                await image.SaveAsync(Path.Combine(WebRootPath, path));
+                
+                image.Mutate(r => r.Resize(0, 350));
+                await image.SaveAsync(Path.Combine(WebRootPath, smallPath));
+
+                return new[] { fullName, smallFullName };
             }
 
             if (File is null && FileUrl is null)
                 throw new BadRequestException("Пустой контент для загрузки");
             
-            return fullName;
+            return new[] { fullName };
         }
     }
 }

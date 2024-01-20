@@ -42,17 +42,17 @@ public class FilesRepository : IFilesRepository
                 _uploader.FileUrl = url;
 
                 var imageName = await _uploader.UploadFileAsync();
-                var imagePath = UrlParse(imageName, hostUrl);
+                var imagePath = UrlParse(imageName.FirstOrDefault()!, hostUrl)!;
 
                 result.Urls.Add(new FileDto
                 {
-                    Name = imageName,
+                    Name = imageName.FirstOrDefault()!,
                     Url = imagePath
                 });
                 
                 files.Add(new File
                 {
-                    Name = imageName
+                    Name = imageName.FirstOrDefault()!
                 });
             }
         }
@@ -63,17 +63,17 @@ public class FilesRepository : IFilesRepository
                 _uploader.File = image;
 
                 var imageName = await _uploader.UploadFileAsync();
-                var imagePath = UrlParse(imageName, hostUrl);
+                var imagePath = UrlParse(imageName.FirstOrDefault()!, hostUrl)!;
 
                 result.Urls.Add(new FileDto
                 {
-                    Name = imageName,
+                    Name = imageName.FirstOrDefault()!,
                     Url = imagePath
                 });
                 
                 files.Add(new File
                 {
-                    Name = imageName
+                    Name = imageName.FirstOrDefault()!
                 });
             }
         }
@@ -97,11 +97,10 @@ public class FilesRepository : IFilesRepository
         if (file is null)
             throw new NotFoundException("Файл не был найден");
         
-        System.IO.File.Delete(Path.Combine(
-            webRootPath is null
-                ? throw new ArgumentException("Корневой путь проекта не может быть пустым")
-                : webRootPath, 
-            "storage", fileName));
+        if (webRootPath is null)
+            throw new ArgumentException("Корневой путь проекта не может быть пустым");
+        
+        System.IO.File.Delete(Path.Combine(webRootPath, "storage", fileName));
 
         _dbContext.Files.Remove(file);
         await _dbContext.SaveChangesAsync(CancellationToken.None);

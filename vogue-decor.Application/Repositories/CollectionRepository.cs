@@ -160,11 +160,11 @@ namespace vogue_decor.Application.Repositories
 
                 var imageName = await _uploader.UploadFileAsync();
 
-                collection.Url = imageName;
+                collection.Url = imageName.FirstOrDefault()!;
 
-                var imagePath = UrlParse(hostUrl, collection.Id.ToString(), imageName);
+                var imagePath = UrlParse(hostUrl, collection.Id.ToString(), imageName.FirstOrDefault()!);
 
-                result.PreviewUrl = imagePath;
+                result.PreviewUrl = imagePath!;
             }
             else
             {
@@ -186,12 +186,12 @@ namespace vogue_decor.Application.Repositories
             if (collection is null)
                 throw new NotFoundException(collection);
 
-            if (collection.Url is not null)
-            {
-                File.Delete(Path.Combine((webRootPath is null
-                    ? throw new ArgumentException("Корневой путь проекта не может быть пустым")
-                    : webRootPath), collection.Id.ToString(), collection.Url));
-            }
+            if (webRootPath is null)
+                throw new ArgumentException("Корневой путь проекта не может быть пустым");
+            
+            File.Delete(Path.Combine(webRootPath, collection.Id.ToString()));
+                
+            collection.Url.Remove(0);
 
             collection.Url = string.Empty;
 

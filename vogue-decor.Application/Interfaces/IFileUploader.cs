@@ -28,6 +28,6 @@ namespace vogue_decor.Application.Interfaces
         /// Загрузить файл асинхронно
         /// </summary>
         /// <returns>Название загруженного файла</returns>
-        Task<string> UploadFileAsync();
+        Task<string[]> UploadFileAsync();
     }
 }

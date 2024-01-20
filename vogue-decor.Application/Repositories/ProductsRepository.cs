@@ -443,10 +443,10 @@ namespace vogue_decor.Application.Repositories
 
                     var imageName = await _uploader.UploadFileAsync();
 
-                    product.Urls.Add(imageName);
+                    product.Urls.AddRange(imageName);
 
                     var imagePath = UrlParse(imageName, product.Id.ToString(), hostUrl);
-                    result.Files.Add(imagePath);
+                    result.Files.AddRange(imagePath);
                 }
             }
             else if (dto.Files!.Count > 0)
@@ -457,10 +457,10 @@ namespace vogue_decor.Application.Repositories
 
                     var imageName = await _uploader.UploadFileAsync();
 
-                    product.Urls.Add(imageName);
+                    product.Urls.AddRange(imageName);
 
                     var imagePath = UrlParse(imageName, product.Id.ToString(), hostUrl);
-                    result.Files.Add(imagePath);
+                    result.Files.AddRange(imagePath);
                 }
             }
             else
@@ -484,14 +484,24 @@ namespace vogue_decor.Application.Repositories
 
             if (!dto.FileName.Contains("http"))
             {
+                var extension = Path.GetExtension(dto.FileName);
+                var fileId = dto.FileName.Substring(0, dto.FileName.IndexOf('_'));
+                
                 File.Delete(Path.Combine(
                     webRootPath is null
                     ? throw new ArgumentException("Корневой путь проекта не может быть пустым")
                     : webRootPath, 
-                    product.Id.ToString(), dto.FileName));
+                    product.Id.ToString(), fileId + "_default" + extension));
+                
+                File.Delete(Path.Combine(
+                    webRootPath is null
+                        ? throw new ArgumentException("Корневой путь проекта не может быть пустым")
+                        : webRootPath, 
+                    product.Id.ToString(), fileId + "_small" + extension));
+                
+                product.Urls.Remove(fileId + "_default" + extension);
+                product.Urls.Remove(fileId + "_small" + extension);
             }
-
-            product.Urls.Remove(dto.FileName);
 
             await _dbContext.SaveChangesAsync(CancellationToken.None);
         }
@@ -552,6 +562,13 @@ namespace vogue_decor.Application.Repositories
         }
 
         private static string? UrlParse(string fileName, string productId, string hostUrl)
+        {
+            var uri = UrlParser.Parse(hostUrl, productId, fileName);
+
+            return uri;
+        }
+
+        private static string[]? UrlParse(string[] fileName, string productId, string hostUrl)
         {
             var uri = UrlParser.Parse(hostUrl, productId, fileName);
 
