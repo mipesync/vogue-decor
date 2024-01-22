@@ -506,38 +506,14 @@ namespace vogue_decor.Application.Repositories
             await _dbContext.SaveChangesAsync(CancellationToken.None);
         }
 
-        public async Task<ProductsCountResponseDto> GetCountAsync(GetProductsCountDto dto)
+        public async Task UpdateRating(UpdateRatingDto dto)
         {
-            Expression<Func<Product, bool>> defaultExpression = u => 
-                (dto.Types == null || dto.Types.Contains(u.ProductType)) &&
-                (u.Price >= dto.MinPrice && u.Price <= dto.MaxPrice) &&
-                (dto.Colors == null || u.Colors.Any(c => dto.Colors.Contains(c))) &&
-                (u.Diameter >= dto.MinDiameter && u.Diameter <= dto.MaxDiameter) &&
-                (u.LampCount >= dto.MinLampCount && u.LampCount <= dto.MaxLampCount) &&
-                (!dto.IsSale || u.Discount > 0) &&
-                (dto.CollectionId == null || u.CollectionId == dto.CollectionId);
+            /*var product = await _dbContext.Products.FirstOrDefaultAsync(p => p.Id == dto.ProductId, CancellationToken.None);
 
-            Expression<Func<Product, bool>> expressionWithCollectionId = u =>
-                u.CollectionId == dto.CollectionId;
-
-            if (dto.CollectionId != Guid.Empty)
-            {
-                InvocationExpression invocationExpression = Expression.Invoke(expressionWithCollectionId,
-                defaultExpression.Parameters.Cast<Expression>());
-
-                defaultExpression = Expression.Lambda<Func<Product, bool>>(
-                    Expression.AndAlso(defaultExpression.Body, invocationExpression),
-                    defaultExpression.Parameters);
-            }
-
-            var productsCount = await _dbContext.Products
-                .AsNoTracking()
-                .Include(u => u.Favourites)
-                .Include(u => u.ProductUsers)
-                .Where(defaultExpression)
-                .CountAsync(CancellationToken.None);
-
-            return new ProductsCountResponseDto { Count = productsCount };
+            if (product is null)
+                throw new NotFoundException(product);*/
+            
+            
         }
 
         public async Task SetFileOrderAsync(SetFileOrderDto dto)

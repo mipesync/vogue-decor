@@ -131,13 +131,6 @@ namespace vogue_decor.Application.Interfaces.Repositories
         Task RemoveImageAsync(RemoveImageDto dto, string webRootPath);
 
         /// <summary>
-        /// Получить количество товаров по критериям
-        /// </summary>
-        /// <param name="dto">Входные данные</param>
-        /// <returns><see cref="ProductsCountResponseDto"/></returns>
-        Task<ProductsCountResponseDto> GetCountAsync(GetProductsCountDto dto);
-
-        /// <summary>
         /// Изменить порядок файлов у товара
         /// </summary>
         /// <param name="dto">Входные данные</param>

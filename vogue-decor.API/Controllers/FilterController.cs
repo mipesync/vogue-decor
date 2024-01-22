@@ -36,6 +36,23 @@ namespace vogue_decor.Controllers
         }
 
         /// <summary>
+        /// Получения списка фильтров
+        /// </summary>
+        /// <returns><see cref="FiltersResponseDto"/></returns>
+        /// <response code="200">Запрос выполнен успешно</response>
+        /// <response code="500">Внутренняя ошибка сервера</response>
+        [HttpGet]
+        [AllowAnonymous]
+        [SwaggerResponse(statusCode: StatusCodes.Status200OK, type: null)]
+        [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
+        public async Task<IActionResult> GetFilters()
+        {
+            var result = await _filtersRepository.GetFilters();
+
+            return Ok(result);
+        }
+
+        /// <summary>
         /// Добавление цвета
         /// </summary>
         /// <param name="name">Название цвета на русском</param>
@@ -84,6 +101,7 @@ namespace vogue_decor.Controllers
         [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
         public async Task<IActionResult> AddChanType([FromQuery] string name)
         {
+            await _filtersRepository.AddChandelierType(name);
 
             return Ok();
         }
@@ -102,6 +120,7 @@ namespace vogue_decor.Controllers
         [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
         public async Task<IActionResult> DeleteChanType([FromQuery] int chandelierTypeId)
         {
+            await _filtersRepository.DeleteChandelierType(chandelierTypeId);
 
             return Ok();
         }
@@ -143,20 +162,112 @@ namespace vogue_decor.Controllers
         }
 
         /// <summary>
-        /// Получения списка фильтров
+        /// Добавление категории
         /// </summary>
-        /// <returns><see cref="FiltersResponseDto"/></returns>
+        /// <param name="name">Название категории</param>
+        /// <param name="productTypeId">Идентификатор типа товара</param>
         /// <response code="200">Запрос выполнен успешно</response>
         /// <response code="500">Внутренняя ошибка сервера</response>
-        [HttpGet]
-        [AllowAnonymous]
+        [HttpPost("category")]
+        [RoleValidate(Roles.ADMIN)]
         [SwaggerResponse(statusCode: StatusCodes.Status200OK, type: null)]
         [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
-        public async Task<IActionResult> GetFilters()
+        public async Task<IActionResult> AddCategory([FromQuery] string name, [FromQuery] int productTypeId)
         {
-            var result = await _filtersRepository.GetFilters();
+            await _filtersRepository.AddCategory(name, productTypeId);
 
-            return Ok(result);
+            return Ok();
+        }
+        
+        /// <summary>
+        /// Удаление категории
+        /// </summary>
+        /// <param name="categoryId">Идентификатор категории</param>
+        /// <response code="200">Запрос выполнен успешно</response>
+        /// <response code="404">Материал не найден</response>
+        /// <response code="500">Внутренняя ошибка сервера</response>
+        [HttpDelete("category")]
+        [RoleValidate(Roles.ADMIN)]
+        [SwaggerResponse(statusCode: StatusCodes.Status200OK, type: null)]
+        [SwaggerResponse(statusCode: StatusCodes.Status404NotFound, type: typeof(ErrorModel))]
+        [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
+        public async Task<IActionResult> DeleteCategory([FromQuery] int categoryId)
+        {
+            await _filtersRepository.DeleteCategory(categoryId);
+
+            return Ok();
+        }
+        
+        /// <summary>
+        /// Добавление материала
+        /// </summary>
+        /// <param name="name">Название материала</param>
+        /// <response code="200">Запрос выполнен успешно</response>
+        /// <response code="500">Внутренняя ошибка сервера</response>
+        [HttpPost("material")]
+        [RoleValidate(Roles.ADMIN)]
+        [SwaggerResponse(statusCode: StatusCodes.Status200OK, type: null)]
+        [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
+        public async Task<IActionResult> AddMaterial([FromQuery] string name)
+        {
+            await _filtersRepository.AddMaterial(name);
+
+            return Ok();
+        }
+        
+        /// <summary>
+        /// Удаление материала
+        /// </summary>
+        /// <param name="materialId">Идентификатор материала</param>
+        /// <response code="200">Запрос выполнен успешно</response>
+        /// <response code="404">Материал не найден</response>
+        /// <response code="500">Внутренняя ошибка сервера</response>
+        [HttpDelete("material")]
+        [RoleValidate(Roles.ADMIN)]
+        [SwaggerResponse(statusCode: StatusCodes.Status200OK, type: null)]
+        [SwaggerResponse(statusCode: StatusCodes.Status404NotFound, type: typeof(ErrorModel))]
+        [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
+        public async Task<IActionResult> DeleteMaterial([FromQuery] int materialId)
+        {
+            await _filtersRepository.DeleteMaterial(materialId);
+
+            return Ok();
+        }
+        
+        /// <summary>
+        /// Добавление стиля
+        /// </summary>
+        /// <param name="name">Название стиля</param>
+        /// <response code="200">Запрос выполнен успешно</response>
+        /// <response code="500">Внутренняя ошибка сервера</response>
+        [HttpPost("style")]
+        [RoleValidate(Roles.ADMIN)]
+        [SwaggerResponse(statusCode: StatusCodes.Status200OK, type: null)]
+        [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
+        public async Task<IActionResult> AddStyle([FromQuery] string name)
+        {
+            await _filtersRepository.AddStyle(name);
+
+            return Ok();
+        }
+        
+        /// <summary>
+        /// Удаление стиля
+        /// </summary>
+        /// <param name="styleId">Идентификатор стиля</param>
+        /// <response code="200">Запрос выполнен успешно</response>
+        /// <response code="404">Стиль не найден</response>
+        /// <response code="500">Внутренняя ошибка сервера</response>
+        [HttpDelete("style")]
+        [RoleValidate(Roles.ADMIN)]
+        [SwaggerResponse(statusCode: StatusCodes.Status200OK, type: null)]
+        [SwaggerResponse(statusCode: StatusCodes.Status404NotFound, type: typeof(ErrorModel))]
+        [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
+        public async Task<IActionResult> DeleteStyle([FromQuery] int styleId)
+        {
+            await _filtersRepository.DeleteStyle(styleId);
+
+            return Ok();
         }
     }
 }

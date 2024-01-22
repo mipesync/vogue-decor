@@ -73,12 +73,13 @@ namespace vogue_decor.Application.Interfaces
         /// <summary>
         /// Получить/установаить список типов люстр
         /// </summary>
-        DbSet<Style> ChandelierTypes { get; set; }
+        DbSet<ChandelierType> ChandelierTypes { get; set; }
 
         /// <summary>
         ///     Ассинхронно сохраняет сделанные изменения
         /// </summary>
         /// <param name="cancellationToken">Токен отмены операции</param>
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+        DbSet<TEntity> Set<TEntity>() where TEntity : class;
     }
 }
