@@ -436,5 +436,25 @@ namespace vogue_decor.Controllers
 
             return Ok();
         }
+
+        /// <summary>
+        /// Изменить позицию товара
+        /// </summary>
+        /// <param name="productId">Идентификатор товара</param>
+        /// <param name="index">Положение товара</param>
+        /// <response code="200">Запрос выполнен успешно</response>
+        /// <response code="404">Товар не найден</response>
+        /// <response code="500">Внутренняя ошибка сервера</response>
+        [HttpPut("index")]
+        [RoleValidate(Roles.ADMIN)]
+        [SwaggerResponse(statusCode: StatusCodes.Status200OK, type: null)]
+        [SwaggerResponse(statusCode: StatusCodes.Status404NotFound, type: typeof(ErrorModel))]
+        [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
+        public async Task<IActionResult> SetIndex([FromQuery] Guid productId, [FromQuery] int index)
+        {
+            await _productsRepository.SetIndexAsync(productId, index);
+
+            return Ok();
+        }
     }
 }

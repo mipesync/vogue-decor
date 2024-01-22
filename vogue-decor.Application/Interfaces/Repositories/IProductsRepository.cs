@@ -142,5 +142,12 @@ namespace vogue_decor.Application.Interfaces.Repositories
         /// <param name="dto">Входные данные</param>
         /// <returns><see cref="GetFiltersCountResponseDto"/></returns>
         Task<GetFiltersCountResponseDto> GetFiltersCountAsync(GetProductByCriteriaDto dto);
+
+        /// <summary>
+        /// Изменить позицию товара
+        /// </summary>
+        /// <param name="productId">Идентификатор товара</param>
+        /// <param name="index">Изменить позицию товара</param>
+        Task SetIndexAsync(Guid productId, int index);
     }
 }

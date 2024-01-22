@@ -106,6 +106,10 @@
         /// Количество покупок
         /// </summary>
         public int PurchasedCount { get; set; }
+        /// <summary>
+        /// Индекс товара
+        /// </summary>
+        public int Index { get; set; }
     }
 
     /// <summary>

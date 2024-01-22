@@ -223,7 +223,19 @@ namespace vogue_decor.Application.Repositories
 
             return result;
         }
-        
+
+        public async Task SetIndexAsync(Guid productId, int index)
+        {
+            var product = await _dbContext.Products.FirstOrDefaultAsync(p => p.Id == productId, CancellationToken.None);
+
+            if (product is null)
+                throw new NotFoundException(product);
+
+            product.Index = index;
+
+            await _dbContext.SaveChangesAsync(CancellationToken.None);
+        }
+
         public async Task<GetProductsResponseDto> GetByArticleAsync(GetByArticleDto dto, string hostUrl)
         {
             var products = await _dbContext.Products
