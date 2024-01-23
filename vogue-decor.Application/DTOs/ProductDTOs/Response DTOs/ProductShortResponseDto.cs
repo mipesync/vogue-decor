@@ -62,5 +62,9 @@
         /// Индекс товара
         /// </summary>
         public int Index { get; set; }
+        /// <summary>
+        /// Код товара
+        /// </summary>
+        public long Code { get; set; }
     }
 }

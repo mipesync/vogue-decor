@@ -69,6 +69,14 @@ namespace vogue_decor.Application.Interfaces.Repositories
         /// <param name="hostUrl">Домен API</param>
         /// <returns><see cref="ProductResponseDto"/></returns>
         Task<GetProductsResponseDto> GetByArticleAsync(GetByArticleDto dto, string hostUrl);
+        
+        /// <summary>
+        /// Получить товар по артикулу
+        /// </summary>
+        /// <param name="dto">Входные данные для получения товара по коду</param>
+        /// <param name="hostUrl">Домен API</param>
+        /// <returns><see cref="ProductResponseDto"/></returns>
+        Task<GetProductsResponseDto> GetByCodeAsync(GetByCodeDto dto, string hostUrl);
 
         /// <summary>
         /// Получить список товаров по идентификатору коллекции
@@ -149,5 +157,11 @@ namespace vogue_decor.Application.Interfaces.Repositories
         /// <param name="productId">Идентификатор товара</param>
         /// <param name="index">Изменить позицию товара</param>
         Task SetIndexAsync(Guid productId, int index);
+
+        /// <summary>
+        /// Обновить рейтинг товара
+        /// </summary>
+        /// <param name="dto">Входные данные</param>
+        Task UpdateRating(UpdateRatingDto dto);
     }
 }

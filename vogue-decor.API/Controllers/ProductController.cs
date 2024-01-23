@@ -245,12 +245,8 @@ namespace vogue_decor.Controllers
         }
 
         /// <summary>
-        /// Поиск товаров по запросу или артикулу
+        /// Поиск товаров по запросу, коду товара или артикулу
         /// </summary>
-        /// <remarks>
-        /// Результат поиска по артикулу смотреть в "Получение товара по артикулу" 
-        /// (предыдущий)
-        /// </remarks>
         /// <param name="dto">Входные данные</param>
         /// <returns><see cref="GetProductsResponseDto"/></returns>
         /// <response code="200">Запрос выполнен успешно</response>

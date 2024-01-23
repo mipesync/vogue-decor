@@ -9,7 +9,7 @@ namespace vogue_decor.Application.DTOs.ProductDTOs
     public class SearchProductDto
     {
         /// <summary>
-        /// Строка запроса
+        /// Строка запроса, код товара или артикул
         /// </summary>
         [Required(ErrorMessage = "Строка запроса обязательна")]
         public string SearchQuery { get; set; } = string.Empty;

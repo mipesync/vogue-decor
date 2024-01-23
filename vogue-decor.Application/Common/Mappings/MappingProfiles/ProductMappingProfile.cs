@@ -106,7 +106,8 @@ namespace vogue_decor.Application.Common.Mappings.MappingProfiles
 
                     return files;
                 }))
-                .ForMember(dto => dto.Quantity, opt => opt.MapFrom(product => product.ProductUsers.Count));
+                .ForMember(dto => dto.Quantity, opt => opt.MapFrom(product => product.ProductUsers.Count))
+                .ForMember(dto => dto.Code, opt => opt.MapFrom(product => long.Parse(product.Code)));
             
             CreateMap<ProductResponseDto, ProductShortResponseDto>(MemberList.Source);
             CreateMap<Product, CartResponseDto>(MemberList.Source)
@@ -145,7 +146,8 @@ namespace vogue_decor.Application.Common.Mappings.MappingProfiles
 
                     return files;
                 }))
-                .ForMember(dto => dto.Quantity, opt => opt.MapFrom(product => product.ProductUsers.Count));
+                .ForMember(dto => dto.Quantity, opt => opt.MapFrom(product => product.ProductUsers.Count))
+                .ForMember(dto => dto.Code, opt => opt.MapFrom(product => long.Parse(product.Code)));
 
         }
     }

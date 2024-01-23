@@ -263,6 +263,33 @@ namespace vogue_decor.Application.Repositories
             };
         }
 
+        public async Task<GetProductsResponseDto> GetByCodeAsync(GetByCodeDto dto, string hostUrl)
+        {
+            var products = await _dbContext.Products
+                .AsNoTracking()
+                .Include(u => u.Favourites)
+                .Include(u => u.ProductUsers)
+                .Where(u => u.Code == dto.Code).ToListAsync(CancellationToken.None);
+
+            var counts = GetCounts(dto.UserId);
+
+            var productsShort = ProductMapper.Map(_mapper, 
+                products                
+                    .Skip(dto.From)
+                    .Take(dto.Count)
+                    .ToList(), dto.UserId);
+
+            productsShort = UrlParse(productsShort, hostUrl);
+
+            return new GetProductsResponseDto
+            {
+                Products = productsShort,
+                TotalCount = products.Count(),
+                CartCount = counts.cart,
+                FavouritesCount = counts.favourites
+            };
+        }
+
         public async Task<GetProductsResponseDto> GetByCollectionIdAsync(GetProductByCollectionIdDto dto,
             string hostUrl)
         {
@@ -293,6 +320,18 @@ namespace vogue_decor.Application.Repositories
         public async Task<GetProductsResponseDto> SearchAsync(SearchProductDto dto, string hostUrl)
         {
             var searchQuery = dto.SearchQuery.Trim();
+            
+            if (long.TryParse(searchQuery, out _))
+            {
+                var product = await GetByCodeAsync(new GetByCodeDto
+                {
+                    Code = searchQuery,
+                    UserId = dto.UserId
+                }, hostUrl);
+
+                return product;
+            }
+            
             var article = FindArticle(dto.SearchQuery);
             
             var strQueryWithoutArticle = article != string.Empty ? string.Join("", searchQuery.Replace($" {article}", "")).Trim() : searchQuery;

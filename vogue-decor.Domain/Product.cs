@@ -118,8 +118,10 @@ namespace vogue_decor.Domain
         /// Список материалов товара
         /// </summary>
         public int[]? Materials { get; set; }
-        //TODO: индекс для положения товара
-
+        /// <summary>
+        /// Индекс товара
+        /// </summary>
+        public int? Index { get; set; }
         /// <summary>
         /// Список пользователей, которые добавили товар в корзину
         /// </summary>
