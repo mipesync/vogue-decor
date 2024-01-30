@@ -236,6 +236,50 @@ namespace vogue_decor.Application.Repositories
             await _dbContext.SaveChangesAsync(CancellationToken.None);
         }
 
+        public async Task<ProductsCompareResponseDto> CompareAsync(Guid firstId, Guid secondId)
+        {
+            var firstProduct = await _dbContext.Products.FirstOrDefaultAsync(p => p.Id == firstId, CancellationToken.None);
+
+            if (firstProduct is null)
+                throw new NotFoundException($"Товар с идентификатором \"{firstId}\" не найден");
+            
+            var secondProduct = await _dbContext.Products.FirstOrDefaultAsync(p => p.Id == secondId, CancellationToken.None);
+
+            if (secondProduct is null)
+                throw new NotFoundException($"Товар с идентификатором \"{secondId}\" не найден");
+
+            var result = new ProductsCompareResponseDto
+            {
+                Name = firstProduct.Name != secondProduct.Name,
+                ProductType = firstProduct.ProductType != secondProduct.ProductType,
+                Article = firstProduct.Article != secondProduct.Article,
+                Price = decimal.Compare(firstProduct.Price, secondProduct.Price) != 0,
+                Colors = !firstProduct.Colors.SequenceEqual(secondProduct.Colors),
+                Diameter = decimal.Compare(firstProduct.Diameter ?? 0, secondProduct.Diameter ?? 0) != 0,
+                Height = decimal.Compare(firstProduct.Height ?? 0, secondProduct.Height ?? 0) != 0,
+                Length = decimal.Compare(firstProduct.Length ?? 0, secondProduct.Length ?? 0) != 0,
+                Width = decimal.Compare(firstProduct.Width ?? 0, secondProduct.Width ?? 0) != 0
+            };
+
+            if (secondProduct.PictureMaterial != null)
+                result.PictureMaterial = firstProduct.PictureMaterial != null 
+                    && !firstProduct.PictureMaterial.SequenceEqual(secondProduct.PictureMaterial);
+            result.Indent = decimal.Compare(firstProduct.Indent ?? 0, secondProduct.Indent ?? 0) != 0;
+            result.Plinth = firstProduct.Plinth != secondProduct.Plinth;
+            result.LampCount = firstProduct.LampCount != secondProduct.LampCount;
+            if (secondProduct.ChandelierTypes != null)
+                result.ChandelierTypes = firstProduct.ChandelierTypes != null 
+                    && !firstProduct.ChandelierTypes.SequenceEqual(secondProduct.ChandelierTypes);
+            if (secondProduct.Styles != null)
+                result.Styles = firstProduct.Styles != null 
+                    && !firstProduct.Styles.SequenceEqual(secondProduct.Styles);
+            if (secondProduct.Materials != null)
+                result.Materials = firstProduct.Materials != null 
+                    && !firstProduct.Materials.SequenceEqual(secondProduct.Materials);
+
+            return result;
+        }
+
         public async Task<GetProductsResponseDto> GetByArticleAsync(GetByArticleDto dto, string hostUrl)
         {
             var products = await _dbContext.Products

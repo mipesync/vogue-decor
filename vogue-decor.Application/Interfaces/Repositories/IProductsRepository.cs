@@ -159,6 +159,14 @@ namespace vogue_decor.Application.Interfaces.Repositories
         Task SetIndexAsync(Guid productId, int index);
 
         /// <summary>
+        /// Сравнить товары
+        /// </summary>
+        /// <param name="firstId">Идентификатор первого товара</param>
+        /// <param name="secondId">Идентификатор второго товара</param>
+        /// <returns></returns>
+        Task<ProductsCompareResponseDto> CompareAsync(Guid firstId, Guid secondId);
+
+        /// <summary>
         /// Обновить рейтинг товара
         /// </summary>
         /// <param name="dto">Входные данные</param>

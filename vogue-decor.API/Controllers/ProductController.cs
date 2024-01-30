@@ -165,6 +165,27 @@ namespace vogue_decor.Controllers
         }
 
         /// <summary>
+        /// Сравнение товаров по их идентификаторам
+        /// </summary>
+        /// <param name="firstId">Идентификатор второго товара</param>
+        /// <param name="secondId">Идентификатор первого товара</param>
+        /// <returns><see cref="ProductsCompareResponseDto"/></returns>
+        /// <response code="200">Запрос выполнен успешно</response>
+        /// <response code="404">Товар не найден</response>
+        /// <response code="500">Внутренняя ошибка сервера</response>
+        [HttpGet("compare")]
+        [AllowAnonymous]
+        [SwaggerResponse(statusCode: StatusCodes.Status200OK, type: typeof(ProductsCompareResponseDto))]
+        [SwaggerResponse(statusCode: StatusCodes.Status404NotFound, type: typeof(ErrorModel))]
+        [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
+        public async Task<IActionResult> CompareAsync([FromQuery] Guid firstId, Guid secondId )
+        {
+            var result = await _productsRepository.CompareAsync(firstId, secondId);
+
+            return Ok(result);
+        }
+
+        /// <summary>
         /// Получение количества товара и фильтров по критериям
         /// </summary>
         /// <param name="dto">Входные данные</param>
