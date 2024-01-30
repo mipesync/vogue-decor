@@ -16,7 +16,7 @@ namespace vogue_decor.Persistence.Services
         public string WebRootPath { get; set; } = string.Empty;
 
         [Obsolete("Obsolete")]
-        public async Task<string[]> UploadFileAsync()
+        public async Task<string[]> UploadFileAsync(bool mutable = true)
         {
             string fileExtension;
             string fileNameHash;
@@ -37,10 +37,9 @@ namespace vogue_decor.Persistence.Services
                 smallPath = Path.Combine(AbsolutePath, smallFullName);
                 
                 using var image = await Image.LoadAsync(File.OpenReadStream());
-          
-                /*await using var fileStream = new FileStream(Path.Combine(WebRootPath, path), FileMode.Create);
-                await File.CopyToAsync(fileStream);*/
                 await image.SaveAsync(Path.Combine(WebRootPath, path));
+
+                if (!mutable) return new[] { fullName, string.Empty };
                 
                 image.Mutate(r => r.Resize(0, 350));
                 await image.SaveAsync(Path.Combine(WebRootPath, smallPath));
@@ -59,8 +58,11 @@ namespace vogue_decor.Persistence.Services
                 using var client = new HttpClient();
                 await using var stream = await client.GetStreamAsync(FileUrl);
                 
+                
                 using var image = await Image.LoadAsync(stream);
                 await image.SaveAsync(Path.Combine(WebRootPath, path));
+                
+                if (!mutable) return new[] { fullName, string.Empty };
                 
                 image.Mutate(r => r.Resize(0, 350));
                 await image.SaveAsync(Path.Combine(WebRootPath, smallPath));

@@ -27,7 +27,8 @@ namespace vogue_decor.Application.Interfaces
         /// <summary>
         /// Загрузить файл асинхронно
         /// </summary>
+        /// <param name="mutable">Изменять ли размер изображения</param>
         /// <returns>Название загруженного файла</returns>
-        Task<string[]> UploadFileAsync();
+        Task<string[]> UploadFileAsync(bool mutable = true);
     }
 }

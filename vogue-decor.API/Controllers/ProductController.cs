@@ -1,17 +1,14 @@
-﻿using System.Net;
-using System.Security.Claims;
-using vogue_decor.Application.Common.Attributes;
-using vogue_decor.Application.DTOs.ProductDTOs;
-using vogue_decor.Application.DTOs.ProductDTOs.Response_DTOs;
-using vogue_decor.Application.Interfaces.Repositories;
-using vogue_decor.Domain.Enums;
-using vogue_decor.Models;
+﻿using System.Security.Claims;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Text.RegularExpressions;
-using Org.BouncyCastle.Ocsp;
+using vogue_decor.Application.DTOs.ProductDTOs;
+using vogue_decor.Application.DTOs.ProductDTOs.Response_DTOs;
+using vogue_decor.Application.Interfaces.Repositories;
 using vogue_decor.Attributes;
+using vogue_decor.Domain.Enums;
+using vogue_decor.Models;
 
 namespace vogue_decor.Controllers
 {

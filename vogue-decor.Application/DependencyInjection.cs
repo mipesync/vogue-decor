@@ -22,6 +22,7 @@ namespace vogue_decor.Application
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IFiltersRepository, FiltersRepository>();
             services.AddTransient<IFilesRepository, FilesRepository>();
+            services.AddTransient<IBrandRepository, BrandRepository>();
             services.AddScoped<IFileParser, FileParser>();
             services.AddScoped<IProductCodeGenerator, ProductCodeGenerator>();
 
