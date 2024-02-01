@@ -10,9 +10,9 @@ services:
         container_name: api
         build:
             context: .
-            dockerfile: vogue-decor/Dockerfile
+            dockerfile: vogue-decor.API/Dockerfile
         ports:
-            - "5896:5896"
+            - "7216:7216"
         networks:
             - api-network
         depends_on:
@@ -28,7 +28,7 @@ services:
             SMTP:Port: $SMTP_Port
             SMTP:Host: $SMTP_Host
         volumes:
-            - /root/backend/vogue-decor/vogue-decor/wwwroot:/app/wwwroot
+            - /root/backend/vogue-decor/vogue-decor.API/wwwroot:/app/wwwroot
     
     postgres_db:
         container_name: postgres
@@ -38,7 +38,7 @@ services:
             POSTGRES_PASSWORD: $POSTGRES_PASSWORD
             POSTGRES_DB: $POSTGRES_DB
         ports:
-            - "5432:5432"
+            - "5434:5432"
         networks:
             - api-network
         volumes:
