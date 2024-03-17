@@ -111,6 +111,7 @@ namespace vogue_decor.Application.Common.Mappings.MappingProfiles
             
             CreateMap<ProductResponseDto, ProductShortResponseDto>(MemberList.Source);
             CreateMap<Product, CartResponseDto>(MemberList.Source)
+                .ForMember(dto => dto.Length, opt => opt.MapFrom(prod => prod.Length))
                 .ForMember(dto => dto.IsFavourite, opt =>
                     opt.MapFrom((product, dto, isFavourite, context) =>
                     {

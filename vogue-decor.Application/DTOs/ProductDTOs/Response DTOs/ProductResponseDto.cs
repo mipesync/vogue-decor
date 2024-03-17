@@ -33,19 +33,21 @@
         /// <summary>
         /// Диаметр товара
         /// </summary>
-        public int Diameter { get; set; } = 0;
+        public decimal Diameter { get; set; } = 0;
         /// <summary>
         /// Высота товара
         /// </summary>
-        public int Height { get; set; } = 0;
+        public decimal[]? Height { get; set; }
+
         /// <summary>
         /// Длина товара
         /// </summary>
-        public int Length { get; set; } = 0;
+        public decimal[]? Length { get; set; }
+
         /// <summary>
         /// Ширина товара
         /// </summary>
-        public int Width { get; set; } = 0;
+        public decimal[]? Width { get; set; }
         /// <summary>
         /// Скидка товара
         /// </summary>

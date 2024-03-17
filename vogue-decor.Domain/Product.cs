@@ -47,13 +47,13 @@ namespace vogue_decor.Domain
         public decimal? Diameter { get; set; }
         
         [XmlElement("height")]
-        public decimal? Height { get; set; }
+        public decimal[]? Height { get; set; }
         
         [XmlElement("length")]
-        public decimal? Length { get; set; }
+        public decimal[]? Length { get; set; }
         
         [XmlElement("width")]
-        public decimal? Width { get; set; }
+        public decimal[]? Width { get; set; }
         
         [XmlElement("pictureMaterial")]
         public int[]? PictureMaterial { get; set; }

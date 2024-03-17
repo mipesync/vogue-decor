@@ -256,9 +256,9 @@ namespace vogue_decor.Application.Repositories
                 Price = decimal.Compare(firstProduct.Price, secondProduct.Price) != 0,
                 Colors = !firstProduct.Colors.SequenceEqual(secondProduct.Colors),
                 Diameter = decimal.Compare(firstProduct.Diameter ?? 0, secondProduct.Diameter ?? 0) != 0,
-                Height = decimal.Compare(firstProduct.Height ?? 0, secondProduct.Height ?? 0) != 0,
-                Length = decimal.Compare(firstProduct.Length ?? 0, secondProduct.Length ?? 0) != 0,
-                Width = decimal.Compare(firstProduct.Width ?? 0, secondProduct.Width ?? 0) != 0
+                Height = CompareNullableArrays(firstProduct.Height, secondProduct.Height),
+                Length = CompareNullableArrays(firstProduct.Length, secondProduct.Length),
+                Width = CompareNullableArrays(firstProduct.Width, secondProduct.Width)
             };
 
             if (secondProduct.PictureMaterial != null)
@@ -832,10 +832,19 @@ namespace vogue_decor.Application.Repositories
                 (dto.Categories == null || u.Types.Any(c => dto.Categories.Contains(c))) &&
                 (dto.Styles == null || u.Styles == null || u.Styles.Any(c => dto.Styles.Contains(c))) &&
                 (dto.Prices == null || u.Price >= dto.Prices.MinValue && u.Price <= dto.Prices.MaxValue) &&
-                (dto.Length == null || u.Length >= dto.Length.MinValue && u.Length <= dto.Length.MaxValue) &&
                 (dto.Diameter == null || u.Diameter >= dto.Diameter.MinValue && u.Diameter <= dto.Diameter.MaxValue) &&
-                (dto.Height == null || u.Height >= dto.Height.MinValue && u.Height <= dto.Height.MaxValue) &&
-                (dto.Width == null || u.Width >= dto.Width.MinValue && u.Width <= dto.Width.MaxValue) &&
+                (dto.Length == null || 
+                    u.Length == null || 
+                        (u.Length.Length == 1 && dto.Length.MaxValue >= u.Length[0] && dto.Length.MinValue <= u.Length[0]) || 
+                        (u.Length.Length == 2 && dto.Length.MaxValue >= u.Length[0] && dto.Length.MinValue <= u.Length[1])) &&
+                (dto.Width == null || 
+                    u.Width == null || 
+                        (u.Width.Length == 1 && dto.Width.MaxValue >= u.Width[0] && dto.Width.MinValue <= u.Width[0]) || 
+                        (u.Width.Length == 2 && dto.Width.MaxValue >= u.Width[0] && dto.Width.MinValue <= u.Width[1])) &&
+                (dto.Height == null || 
+                    u.Height == null || 
+                        (u.Height.Length == 1 && dto.Height.MaxValue >= u.Height[0] && dto.Height.MinValue <= u.Height[0]) || 
+                        (u.Height.Length == 2 && dto.Height.MaxValue >= u.Height[0] && dto.Height.MinValue <= u.Height[1])) &&
                 (dto.Indent == null || u.Indent >= dto.Indent.MinValue && u.Indent <= dto.Indent.MaxValue) &&
                 (dto.LampCount == null || u.LampCount >= dto.LampCount.MinValue && u.LampCount <= dto.LampCount.MaxValue) &&
                 (u.ChandelierTypes == null || dto.AdditionalParams == null || u.ChandelierTypes.Any(c => dto.AdditionalParams.Contains(c))) &&
@@ -965,6 +974,24 @@ namespace vogue_decor.Application.Repositories
             return values.Any()
                 ? new RangeFilterDto { MinValue = Convert.ToDecimal(values.Min()), MaxValue = Convert.ToDecimal(values.Max()) }
                 : null;
+        }
+        
+        private RangeFilterDto? GetRangeFilterByCriteria(IEnumerable<Product> products, Func<Product, decimal[]?> productSelector)
+        {
+            var values = products
+                .SelectMany(p => productSelector(p) ?? Enumerable.Empty<decimal>())
+                .ToArray();
+
+            return values.Any()
+                ? new RangeFilterDto { MinValue = values.Min(), MaxValue = values.Max() }
+                : null;
+        }
+
+        private static bool CompareNullableArrays(decimal[]? firstArray, decimal[]? secondArray)
+        {
+            if (firstArray == null || secondArray == null)
+                return firstArray != secondArray;
+            return firstArray.Length != secondArray.Length || firstArray.Where((t, i) => t != secondArray[i]).Any();
         }
     }
 }

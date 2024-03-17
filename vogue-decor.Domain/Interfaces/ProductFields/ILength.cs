@@ -8,5 +8,5 @@ public interface ILength
     /// <summary>
     /// Длина товара
     /// </summary>
-    public decimal? Length { get; set; }
+    public decimal[]? Length { get; set; }
 }

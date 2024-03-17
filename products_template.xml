@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<products> <!-- Дублирующиеся поля означают список. Может быть как одно поле, так и несколько -->
+    <product>
+        <name>Название товара</name> <!-- Обязательный -->
+        <description>Описание товара</description>
+        <productType>Тип товара</productType> <!-- Обязательный -->
+        <categories>Категория товара 1</categories> <!-- Обязательный -->
+        <categories>Категория товара 2</categories>
+        <article>Артикул товара</article> <!-- Обязательный -->
+        <price>Цена товара</price> <!-- Обязательный -->
+        <color>Цвет товара 1</color> <!-- Обязательный -->
+        <color>Цвет товара 2</color>
+        <discount>Скидка на товар</discount>
+        <style>Стиль товара 1</style>
+        <style>Стиль товара 2</style>
+        <material>Материал товара 1</material>
+        <material>Материал товара 2</material>
+        <availability>Наличие товара</availability> <!-- Обязательный -->
+        <brandId>Идентификатор бренда</brandId> <!-- Обязательный -->
+        <collectionId>Идентификатор колекции</collectionId>
+        <url>Ссылка на изображение 1</url> <!-- Обязательный -->
+        <url>Ссылка на изображение 2</url>
+        <height>Высота товара</height>
+        <length>Длина товара</length>
+        <width>Ширина товара</width>
+        <diameter>Диаметр товара</diameter>
+        <pictureMaterial>Материал рамки картины 1</pictureMaterial>
+        <pictureMaterial>Материал рамки картины 2</pictureMaterial>
+        <indent>Отступ товара</indent>
+        <lampCount>Количество лампочек</lampCount>
+        <plinth>Цоколь лампочек</plinth>
+        <chandelierType>Тип люстры 1</chandelierType>
+        <chandelierType>Тип люстры 2</chandelierType>
+    </product>
+</products>

@@ -8,5 +8,5 @@ public interface IWidth
     /// <summary>
     /// Ширина товара
     /// </summary>
-    public decimal? Width { get; set; }
+    public decimal[]? Width { get; set; }
 }

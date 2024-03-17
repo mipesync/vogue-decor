@@ -1,0 +1,579 @@
+<products>
+  <product>
+    <name>Бра "Луна"</name>
+    <description>Это бра создает уютную и романтическую атмосферу в вашем доме. Оно выполнено из металла силвер цвета и имеет форму полумесяца с лампочкой внутри. Это бра подойдет для спальни, гостиной или коридора.</description>
+    <productType>1</productType>
+    <categories>2</categories>
+    <article>B-002</article>
+    <price>5000</price>
+    <color>3</color>
+    <height>30</height>
+    <length>15</length>
+    <length>132</length>
+    <indent>10</indent>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <plinth>E27</plinth>
+    <lampCount>1</lampCount>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+  <product>
+    <name>Настольная лампа "Фламинго"</name>
+    <description>Эта настольная лампа добавит яркости и экзотики в ваш интерьер. Она выполнена из пластика розового цвета и имеет форму фламинго с длинной шеей. Эта лампа подойдет для детской комнаты, кабинета или гостиной.</description>
+    <productType>1</productType>
+    <categories>3</categories>
+    <article>N-003</article>
+    <price>3000</price>
+    <color>9</color>
+    <height>40</height>
+    <length>20</length>
+    <width>10</width>
+    <width>15</width>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <plinth>E14</plinth>
+    <lampCount>1</lampCount>
+    <style>4</style>
+    <material>3</material>
+    <availability>5</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+  <product>
+    <name>Торшер "Графит"</name>
+    <description>Этот торшер отличается современным и стильным дизайном. Он выполнен из металла хром цвета и имеет три гибких плафона, которые можно направлять в разные стороны. Этот торшер подойдет для гостиной, спальни или кабинета.</description>
+    <productType>1</productType>
+    <categories>4</categories>
+    <article>T-004</article>
+    <price>10000</price>
+    <color>5</color>
+    <height>180</height>
+    <diameter>30</diameter>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <discount>15</discount>
+    <plinth>G9</plinth>
+    <lampCount>3</lampCount>
+    <style>8</style>
+    <material>4</material>
+    <availability>10</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+  <product>
+    <name>Подвесной светильник "Капля"</name>
+    <description>Этот подвесной светильник выглядит очень элегантно и изящно. Он выполнен из стекла прозрачного цвета и имеет форму капли с металлическим креплением. Этот светильник подойдет для кухни, столовой или гостиной.</description>
+    <productType>1</productType>
+    <categories>5</categories>
+    <article>P-005</article>
+    <price>7000</price>
+    <color>8</color>
+    <height>40</height>
+    <diameter>20</diameter>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <plinth>E27</plinth>
+    <lampCount>1</lampCount>
+    <style>5</style>
+    <material>2</material>
+    <availability>7</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+  <product>
+    <name>Потолочный светильник "Звезда"</name>
+    <description>Этот потолочный светильник создаст в вашем доме атмосферу праздника и волшебства. Он выполнен из металла золотого цвета и имеет форму звезды с множеством лампочек. Этот светильник подойдет для гостиной, спальни или детской комнаты.</description>
+    <productType>1</productType>
+    <categories>6</categories>
+    <article>P-006</article>
+    <price>8000</price>
+    <color>1</color>
+    <diameter>60</diameter>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <plinth>E14</plinth>
+    <lampCount>10</lampCount>
+    <style>4</style>
+    <material>1</material>
+    <availability>3</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+  <product>
+    <name>Уличный светильник "Фонарь"</name>
+    <description>Этот уличный светильник придаст вашему двору или саду уют и романтизм. Он выполнен из металла бронзового цвета и имеет форму фонаря с прозрачным стеклом. Этот светильник подойдет для освещения дорожек, входов или беседок.</description>
+    <productType>1</productType>
+    <categories>7</categories>
+    <article>U-007</article>
+    <price>9000</price>
+    <color>2</color>
+    <height>150</height>
+    <diameter>30</diameter>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <plinth>E27</plinth>
+    <lampCount>1</lampCount>
+    <style>1</style>
+    <material>1</material>
+    <availability>6</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+  <product>
+    <name>Подсветка для картин "Галерея"</name>
+    <description>Эта подсветка для картин подчеркнет красоту и оригинальность ваших произведений искусства. Она выполнена из металла никель цвета и имеет тонкий корпус с гибким плафоном. Эта подсветка подойдет для гостиной, кабинета или холла.</description>
+    <productType>1</productType>
+    <categories>8</categories>
+    <article>P-008</article>
+    <price>4000</price>
+    <color>4</color>
+    <length>50</length>
+    <indent>15</indent>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <plinth>G4</plinth>
+    <lampCount>1</lampCount>
+    <style>6</style>
+    <material>1</material>
+    <availability>8</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+  <product>
+    <name>Трек "Линия"</name>
+    <description>Этот трек позволит вам создать индивидуальное освещение в любом помещении. Он выполнен из металла хром цвета и имеет четыре спота, которые можно поворачивать и наклонять. Этот трек подойдет для кухни, гостиной или коридора.</description>
+    <productType>1</productType>
+    <categories>9</categories>
+    <article>T-009</article>
+    <price>6000</price>
+    <color>5</color>
+    <length>100</length>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <plinth>GU10</plinth>
+    <lampCount>4</lampCount>
+    <style>8</style>
+    <material>1</material>
+    <availability>12</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+  <product>
+    <name>Абажур "Роза"</name>
+    <description>Этот абажур добавит изысканности и романтики в ваш интерьер. Он выполнен из ткани бежевого цвета и имеет форму розы с лепестками. Этот абажур подойдет для настольной лампы, торшера или бра.</description>
+    <productType>1</productType>
+    <categories>10</categories>
+    <article>A-010</article>
+    <price>2000</price>
+    <color>9</color>
+    <diameter>30</diameter>
+    <height>20</height>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <style>2</style>
+    <material>5</material>
+    <availability>15</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+  <product>
+    <name>Диван "Комфорт"</name>
+    <description>Этот диван обеспечит вам максимальный комфорт и удобство. Он выполнен из искусственной кожи коричневого цвета и имеет мягкие подушки и подлокотники. Этот диван подойдет для гостиной, спальни или кабинета.</description>
+    <productType>2</productType>
+    <categories>11</categories>
+    <article>D-011</article>
+    <price>30000</price>
+    <color>6</color>
+    <length>200</length>
+    <width>100</width>
+    <height>80</height>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <discount>20</discount>
+    <rating>4.5</rating>
+    <style>6</style>
+    <material>5</material>
+    <availability>4</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+  <product>
+    <name>Кресло "Релакс"</name>
+    <description>Это кресло идеально подходит для отдыха и расслабления. Оно выполнено из ткани синего цвета и имеет механизм качания и регулировки спинки. Это кресло подойдет для гостиной, спальни или кабинета.</description>
+    <productType>2</productType>
+    <categories>12</categories>
+    <article>K-012</article>
+    <price>15000</price>
+    <color>11</color>
+    <length>80</length>
+    <width>70</width>
+    <height>100</height>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <rating>5</rating>
+    <style>7</style>
+    <material>1</material>
+    <availability>6</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product> 
+  <product>
+    <name>Стол "Модерн"</name>
+    <description>Этот стол отличается простотой и функциональностью. Он выполнен из дерева белого цвета и имеет четыре ножки и прямоугольную столешницу. Этот стол подойдет для кухни, столовой или гостиной.</description>
+    <productType>2</productType>
+    <categories>13</categories>
+    <article>S-013</article>
+    <price>10000</price>
+    <color>2</color>
+    <length>120</length>
+    <width>80</width>
+    <height>75</height>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <rating>4</rating>
+    <style>5</style>
+    <material>1</material>
+    <availability>10</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+  <product>
+    <name>Стул "Лофт"</name>
+    <description>Этот стул придаст вашему интерьеру индустриальный и современный вид. Он выполнен из металла черного цвета и имеет спинку и сиденье из кожи коричневого цвета. Этот стул подойдет для кухни, столовой или гостиной.</description>
+    <productType>2</productType>
+    <categories>14</categories>
+    <article>S-014</article>
+    <price>5000</price>
+    <color>7</color>
+    <color>13</color>
+    <height>90</height>
+    <length>50</length>
+    <width>50</width>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <discount>5</discount>
+    <rating>4.5</rating>
+    <style>3</style>
+    <material>2</material>
+    <material>5</material>
+    <availability>12</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+  <product>
+    <name>Комод "Классика"</name>
+    <description>Этот комод воплощает классический стиль и элегантность. Он выполнен из дерева бежевого цвета и имеет четыре выдвижных ящика с бронзовыми ручками. Этот комод подойдет для спальни, гостиной или прихожей.</description>
+    <productType>2</productType>
+    <categories>15</categories>
+    <article>K-015</article>
+    <price>15000</price>
+    <color>9</color>
+    <height>100</height>
+    <length>80</length>
+    <width>40</width>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <rating>5</rating>
+    <style>1</style>
+    <material>1</material>
+    <availability>8</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+  <product>
+    <name>Консоль "Арт-деко"</name>
+    <description>Эта консоль поразит вас своим необычным и оригинальным дизайном. Она выполнена из металла золотого цвета и имеет асимметричную форму с геометрическими узорами. Эта консоль подойдет для гостиной, спальни или холла.</description>
+    <productType>2</productType>
+    <categories>16</categories>
+    <article>K-016</article>
+    <price>20000</price>
+    <color>1</color>
+    <height>80</height>
+    <length>100</length>
+    <width>40</width>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <rating>4.5</rating>
+    <style>6</style>
+    <material>2</material>
+    <availability>5</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+  <product>
+    <name>Кровать "Минималист"</name>
+    <description>Эта кровать отличается простотой и лаконичностью. Она выполнена из дерева белого цвета и имеет низкую спинку и прямоугольное основание. Эта кровать подойдет для спальни, детской комнаты или гостевой комнаты.</description>
+    <productType>2</productType>
+    <categories>7</categories>
+    <article>K-017</article>
+    <price>25000</price>
+    <color>2</color>
+    <height>80</height>
+    <length>200</length>
+    <width>160</width>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <rating>4</rating>
+    <style>7</style>
+    <material>1</material>
+    <availability>6</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+  <product>
+    <name>Матрас "Ортопедик"</name>
+    <description>Этот матрас обеспечит вам здоровый и комфортный сон. Он выполнен из искусственной нити серого цвета и имеет ортопедический эффект. Этот матрас подойдет для любой кровати или дивана.</description>
+    <productType>2</productType>
+    <categories>18</categories>
+    <article>M-018</article>
+    <price>10000</price>
+    <color>10</color>
+    <height>20</height>
+    <length>200</length>
+    <width>160</width>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <rating>5</rating>
+    <material>6</material>
+    <availability>10</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+  <product>
+    <name>Пуф "Поп-арт"</name>
+    <description>Этот пуф добавит яркости и настроения в ваш дом. Он выполнен из ткани желтого цвета и имеет принт с изображением смайлика. Этот пуф подойдет для гостиной, спальни или детской комнаты.</description>
+    <productType>2</productType>
+    <categories>19</categories>
+    <article>P-019</article>
+    <price>3000</price>
+    <color>4</color>
+    <diameter>40</diameter>
+    <height>20</height>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <rating>4.5</rating>
+    <style>4</style>
+    <material>1</material>
+    <availability>12</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+  <product>
+    <name>Банкетка "Скандинавский"</name>
+    <description>Эта банкетка создаст в вашем доме атмосферу уюта и гармонии. Она выполнена из дерева белого цвета и имеет мягкое сиденье из ткани серого цвета. Эта банкетка подойдет для прихожей, спальни или гостиной.</description>
+    <productType>2</productType>
+    <categories>19</categories>
+    <article>B-020</article>
+    <price>7000</price>
+    <color>2</color>
+    <color>10</color>
+    <height>50</height>
+    <length>100</length>
+    <width>40</width>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <rating>4</rating>
+    <style>9</style>
+    <material>1</material>
+    <availability>9</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+  <product>
+    <name>Зеркало-панно "Абстракция"</name>
+    <description>Это зеркало-панно является настоящим произведением искусства. Оно выполнено из стекла разных цветов и имеет необычную форму с геометрическими фигурами. Это зеркало-панно подойдет для гостиной, спальни или холла.</description>
+    <productType>3</productType>
+    <categories>20</categories>
+    <article>Z-021</article>
+    <price>15000</price>
+    <color>2</color>
+    <color>4</color>
+    <color>7</color>
+    <color>10</color>
+    <color>13</color>
+    <height>80</height>
+    <length>120</length>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <rating>5</rating>
+    <style>6</style>
+    <material>2</material>
+    <availability>7</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+  <product>
+    <name>Зеркало с принтами "Кошки"</name>
+    <description>Это зеркало с принтами порадует любителей кошек. Оно выполнено из стекла белого цвета и имеет круглую форму с изображениями разных пород кошек. Это зеркало подойдет для детской комнаты, спальни или ванной комнаты.</description>
+    <productType>3</productType>
+    <categories>21</categories>
+    <article>Z-022</article>
+    <price>5000</price>
+    <color>2</color>
+    <diameter>60</diameter>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <rating>4.5</rating>
+    <style>4</style>
+    <material>2</material>
+    <availability>10</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+  <product>
+    <name>Зеркало-солнышко "Радуга"</name>
+    <description>Это зеркало-солнышко создаст в вашем доме атмосферу праздника и веселья. Оно выполнено из металла разных цветов и имеет форму солнца с лучами. Это зеркало-солнышко подойдет для гостиной, спальни или детской комнаты.</description>
+    <productType>3</productType>
+    <categories>22</categories>
+    <article>Z-023</article>
+    <price>10000</price>
+    <color>1</color>
+    <color>2</color>
+    <color>4</color>
+    <color>7</color>
+    <color>9</color>
+    <color>11</color>
+    <color>13</color>
+    <diameter>80</diameter>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <rating>5</rating>
+    <style>4</style>
+    <material>1</material>
+    <availability>8</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+  <product>
+    <name>Зеркало с деревом "Природа"</name>
+    <description>Это зеркало с деревом приблизит вас к природе и экологии. Оно выполнено из стекла прозрачного цвета и имеет рамку из натурального дерева. Это зеркало подойдет для гостиной, спальни или прихожей.</description>
+    <productType>3</productType>
+    <categories>25</categories>
+    <article>Z-024</article>
+    <price>8000</price>
+    <color>8</color>
+    <height>100</height>
+    <length>80</length>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <rating>4</rating>
+    <style>9</style>
+    <material>2</material>
+    <material>3</material>
+    <availability>9</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+  <product>
+    <name>Люстра "Кристалл"</name>
+    <description>Эта люстра излучает роскошь и блеск. Она выполнена из металла хром цвета и украшена множеством хрустальных подвесок, которые отражают свет. Эта люстра подойдет для гостиной, спальни или зала.</description>
+    <productType>1</productType>
+    <categories>1</categories>
+    <article>L-025</article>
+    <price>20000</price>
+    <color>5</color>
+    <diameter>60</diameter>
+    <height>80</height>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <plinth>E14</plinth>
+    <lampCount>8</lampCount>
+    <chandelierType>2</chandelierType>
+    <style>2</style>
+    <material>1</material>
+    <availability>4</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+  <product>
+    <name>Люстра "Цветок"</name>
+    <description>Эта люстра создаст в вашем доме атмосферу нежности и красоты. Она выполнена из металла белого цвета и имеет форму цветка с лепестками из стекла. Эта люстра подойдет для гостиной, спальни или детской комнаты.</description>
+    <productType>1</productType>
+    <categories>1</categories>
+    <article>L-026</article>
+    <price>10000</price>
+    <color>2</color>
+    <diameter>40</diameter>
+    <height>50</height>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <plinth>E27</plinth>
+    <lampCount>1</lampCount>
+    <chandelierType>1</chandelierType>
+    <style>5</style>
+    <material>2</material>
+    <availability>6</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+  <product>
+    <name>Люстра "Венеция"</name>
+    <description>Эта люстра воплощает в себе дух итальянского стиля и элегантности. Она выполнена из металла золотого цвета и имеет изящные изгибы и детали. Эта люстра подойдет для гостиной, спальни или зала.</description>
+    <productType>1</productType>
+    <categories>1</categories>
+    <article>L-027</article>
+    <price>15000</price>
+    <color>1</color>
+    <diameter>70</diameter>
+    <height>60</height>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <plinth>E14</plinth>
+    <lampCount>6</lampCount>
+    <chandelierType>2</chandelierType>
+    <style>1</style>
+    <material>1</material>
+    <availability>5</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+  <product>
+    <name>Люстра "Лофт"</name>
+    <description>Эта люстра отличается современным и стильным дизайном. Она выполнена из металла черного цвета и имеет четыре прямоугольных плафона с лампочками. Эта люстра подойдет для кухни, столовой или гостиной.</description>
+    <productType>1</productType>
+    <categories>1</categories>
+    <article>L-028</article>
+    <price>12000</price>
+    <color>7</color>
+    <height>40</height>
+    <length>80</length>
+    <width>40</width>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <plinth>E27</plinth>
+    <lampCount>4</lampCount>
+    <chandelierType>3</chandelierType>
+    <style>3</style>
+    <material>1</material>
+    <availability>8</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+  <product>
+    <name>Люстра "Планета"</name>
+    <description>Эта люстра создаст в вашем доме атмосферу космоса и фантастики. Она выполнена из металла силвер цвета и имеет форму шара с отверстиями, через которые просвечивает свет. Эта люстра подойдет для гостиной, спальни или детской комнаты.</description>
+    <productType>1</productType>
+    <categories>1</categories>
+    <article>L-029</article>
+    <price>13000</price>
+    <color>3</color>
+    <diameter>50</diameter>
+    <height>60</height>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <plinth>E27</plinth>
+    <lampCount>1</lampCount>
+    <chandelierType>1</chandelierType>
+    <style>8</style>
+    <material>1</material>
+    <availability>7</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+  <product>
+    <name>Люстра "Ретро"</name>
+    <description>Эта люстра воссоздает атмосферу прошлого века и винтажного стиля. Она выполнена из металла бронзового цвета и имеет пять колпаков с лампочками в форме свечей. Эта люстра подойдет для гостиной, спальни или зала.</description>
+    <productType>1</productType>
+    <categories>1</categories>
+    <article>L-030</article>
+    <price>14000</price>
+    <color>2</color>
+    <diameter>60</diameter>
+    <height>70</height>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <plinth>E14</plinth>
+    <lampCount>5</lampCount>
+    <chandelierType>2</chandelierType>
+    <style>2</style>
+    <material>1</material>
+    <availability>6</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+  <product>
+    <name>Люстра "Модерн"</name>
+    <description>Эта люстра отличается простотой и лаконичностью. Она выполнена из металла никель цвета и имеет три круглых плафона с лампочками. Эта люстра подойдет для кухни, столовой или гостиной.</description>
+    <productType>1</productType>
+    <categories>1</categories>
+    <article>L-031</article>
+    <price>11000</price>
+    <color>4</color>
+    <height>40</height>
+    <length>60</length>
+    <width>20</width>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <plinth>G9</plinth>
+    <lampCount>3</lampCount>
+    <chandelierType>3</chandelierType>
+    <style>5</style>
+    <material>1</material>
+    <availability>9</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+  <product>
+    <name>Люстра "Фея"</name>
+    <description>Эта люстра добавит в ваш дом волшебства и сказки. Она выполнена из металла белого цвета и украшена множеством бусин, перьев и ленточек. Эта люстра подойдет для гостиной, спальни или детской комнаты.</description>
+    <productType>1</productType>
+    <categories>1</categories>
+    <article>L-032</article>
+    <price>9000</price>
+    <color>2</color>
+    <color>9</color>
+    <color>11</color>
+    <color>13</color>
+    <diameter>40</diameter>
+    <height>50</height>
+    <url>http://static.tildacdn.com/tild6564-6162-4132-b033-653962343535/7IMrUCkzFio.jpg</url>
+    <plinth>E14</plinth>
+    <lampCount>3</lampCount>
+    <chandelierType>1</chandelierType>
+    <style>4</style>
+    <material>1</material>
+    <availability>7</availability>
+    <brandId>d009018c-df48-4ccd-acff-3abda71c93de</brandId>
+  </product>
+</products>

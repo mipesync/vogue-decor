@@ -77,11 +77,11 @@ namespace vogue_decor.Application.DTOs.ProductDTOs
         /// </summary>
         public Guid? CollectionId { get; set; }
         
-        public decimal? Height { get; set; }
+        public decimal[]? Height { get; set; }
         
-        public decimal? Length { get; set; }
+        public decimal[]? Length { get; set; }
         
-        public decimal? Width { get; set; }
+        public decimal[]? Width { get; set; }
         
         public decimal? Diameter { get; set; }
         
