@@ -1,4 +1,6 @@
-﻿namespace vogue_decor.Application.DTOs.CollectionDTOs;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace vogue_decor.Application.DTOs.CollectionDTOs;
 
 /// <summary>
 /// DTO для получения коллекций бренда
@@ -8,6 +10,7 @@ public class GetCollectionsByBrandIdDto
     /// <summary>
     /// Идентификатор бренда
     /// </summary>
+    [Required(ErrorMessage = "Идентификатор бренда обязателен")]
     public Guid BrandId { get; set; }
     
     /// <summary>

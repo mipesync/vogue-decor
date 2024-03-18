@@ -651,7 +651,7 @@ namespace vogue_decor.Application.Repositories
         {
             for (int i = 0; i < products.Count; i++)
             {
-                products[i].Urls = UrlParser.Parse(hostUrl, products[i].Id.ToString(), products[i].Urls);
+                products[i].Urls = new[] { UrlParser.Parse(hostUrl, products[i].Id.ToString(), products[i].Urls[1]) };
             }
             return products;
         }
@@ -661,7 +661,10 @@ namespace vogue_decor.Application.Repositories
         {
             for (int i = 0; i < product.Files.Count; i++)
             {
-                product.Files[i].Url = UrlParser.Parse(hostUrl, product.Id.ToString(), product.Files[i].Url)!;
+                if (product.Files[i].Url.Contains("default"))
+                    product.Files[i].Url = UrlParser.Parse(hostUrl, product.Id.ToString(), product.Files[i].Url)!;
+                else
+                    product.Files.Remove(product.Files[i]);
             }
             return product;
         }

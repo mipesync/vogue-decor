@@ -107,7 +107,7 @@ public class BrandRepository : IBrandRepository
                 Name = brand.Name,
                 File = new FileDto
                 {
-                    Url = UrlParse(brand.Url, brand.Id.ToString(), hostUrl)!,
+                    Url = UrlParse(hostUrl, brand.Id.ToString(), brand.Url)!,
                     Name = brand.Url
                 }
             });
@@ -130,7 +130,7 @@ public class BrandRepository : IBrandRepository
             Name = brand.Name,
             File = new FileDto
             {
-                Url = UrlParse(brand.Url, brand.Id.ToString(), hostUrl)!,
+                Url = UrlParse(hostUrl, brand.Id.ToString(), brand.Url)!,
                 Name = brand.Url
             }
         };

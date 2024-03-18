@@ -11,7 +11,8 @@ namespace vogue_decor.Application.Common.Mappings.MappingProfiles
     {
         public CollectionMappingProfile()
         {
-            CreateMap<Collection, CollectionLookupDto>(MemberList.Source);
+            CreateMap<Collection, CollectionLookupDto>(MemberList.Source)
+                .ForMember(dto => dto.Preview, opt => opt.MapFrom(c => c.Url));
         }
     }
 }

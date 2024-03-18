@@ -23,7 +23,8 @@ namespace vogue_decor.Controllers
         private string UrlRaw => $"{Request.Scheme}://{Request.Host}";
         private readonly ICollectionRepository _collectionsRepository;
         private readonly IWebHostEnvironment _environment;
-        private const string WebRootPath = "/app/wwwroot";
+        //private const string WebRootPath = "/app/wwwroot";
+        private string WebRootPath => _environment.WebRootPath;
 
         /// <summary>
         /// Инициализация начальных параметров
