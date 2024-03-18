@@ -77,6 +77,10 @@
         /// </summary>
         public Guid? CollectionId { get; set; }
         /// <summary>
+        /// Идентификатор бренда
+        /// </summary>
+        public Guid? BrandId { get; set; }
+        /// <summary>
         /// Файлы товара (фото, видео)
         /// </summary>
         public List<FileDto> Files { get; set; } = new();
