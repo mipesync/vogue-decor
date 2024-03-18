@@ -207,13 +207,20 @@ namespace vogue_decor.Application.Repositories
                 ProductTypes = GetFiltersByProductType(products),
                 Categories = GetFiltersByCategory(products, dto.ProductTypes),
                 Styles = GetFiltersByStyle(products),
-                Prices = GetRangeFilterByPrice(products),
-                Length = GetRangeFilterByLength(products),
-                Diameter = GetRangeFilterByDiameter(products),
-                Height = GetRangeFilterByHeight(products),
-                Width = GetRangeFilterByWidth(products),
-                Indent = GetRangeFilterByIndent(products),
-                LampCount = GetRangeFilterByLampCount(products),
+                MinPrice = products.Select(p => p.Price).Min(),
+                MaxPrice = products.Select(p => p.Price).Max(),
+                MinLength = products.Select(p => p.Length![0]).Min(),
+                MaxLength = products.Max(p => p.Length!.Length == 2 ? p.Length![1] : p.Length[0]),
+                MinDiameter = products.Select(p => p.Diameter).Min(),
+                MaxDiameter = products.Select(p => p.Diameter).Max(),
+                MinHeight = products.Select(p => p.Height![0]).Min(),
+                MaxHeight = products.Max(p => p.Height!.Length == 2 ? p.Height![1] : p.Height[0]),
+                MinWidth = products.Select(p => p.Width![0]).Min(),
+                MaxWidth = products.Max(p => p.Width!.Length == 2 ? p.Width![1] : p.Width[0]),
+                MinIndent = products.Select(p => p.Indent).Min(),
+                MaxIndent = products.Select(p => p.Indent).Max(),
+                MinLampCount = products.Select(p => p.LampCount).Min(),
+                MaxLampCount = products.Select(p => p.LampCount).Max(),
                 AdditionalParams = GetFiltersByAdditionalParams(products),
                 Materials = GetFiltersByMaterials(products),
                 PictureMaterial = GetFiltersByPictureMaterials(products),
@@ -834,26 +841,23 @@ namespace vogue_decor.Application.Repositories
                 (dto.ProductTypes == null || dto.ProductTypes.Contains(u.ProductType)) &&
                 (dto.Categories == null || u.Types.Any(c => dto.Categories.Contains(c))) &&
                 (dto.Styles == null || u.Styles == null || u.Styles.Any(c => dto.Styles.Contains(c))) &&
-                (dto.Prices == null || 
-                    dto.Prices.MaxValue == 0m && u.Price >= dto.Prices.MinValue ||
-                    u.Price >= dto.Prices.MinValue && u.Price <= dto.Prices.MaxValue) &&
-                (dto.Diameter == null || 
-                    dto.Diameter.MaxValue == 0m && u.Diameter >= dto.Diameter.MinValue ||
-                    u.Diameter >= dto.Diameter.MinValue && u.Diameter <= dto.Diameter.MaxValue) &&
-                (dto.Length == null || 
-                    u.Length == null || 
-                        (u.Length.Length == 1 && dto.Length.MaxValue >= u.Length[0] && dto.Length.MinValue <= u.Length[0]) || 
-                        (u.Length.Length == 2 && dto.Length.MaxValue >= u.Length[0] && dto.Length.MinValue <= u.Length[1])) &&
-                (dto.Width == null || 
-                    u.Width == null || 
-                        (u.Width.Length == 1 && dto.Width.MaxValue >= u.Width[0] && dto.Width.MinValue <= u.Width[0]) || 
-                        (u.Width.Length == 2 && dto.Width.MaxValue >= u.Width[0] && dto.Width.MinValue <= u.Width[1])) &&
-                (dto.Height == null || 
-                    u.Height == null || 
-                        (u.Height.Length == 1 && dto.Height.MaxValue >= u.Height[0] && dto.Height.MinValue <= u.Height[0]) || 
-                        (u.Height.Length == 2 && dto.Height.MaxValue >= u.Height[0] && dto.Height.MinValue <= u.Height[1])) &&
-                (dto.Indent == null || u.Indent >= dto.Indent.MinValue && u.Indent <= dto.Indent.MaxValue) &&
-                (dto.LampCount == null || u.LampCount >= dto.LampCount.MinValue && u.LampCount <= dto.LampCount.MaxValue) &&
+                (dto.MinPrice == null || u.Price >= dto.MinPrice) &&
+                (dto.MaxPrice == null || u.Price <= dto.MaxPrice) &&
+                (dto.MinDiameter == null || u.Diameter >= dto.MinDiameter) &&
+                (dto.MaxDiameter == null || u.Diameter <= dto.MaxDiameter) &&
+                (dto.MinLength == null || u.Length == null || 
+                    (u.Length.Length == 1 && dto.MaxLength >= u.Length[0] && dto.MinLength <= u.Length[0]) || 
+                    (u.Length.Length == 2 && dto.MaxLength >= u.Length[0] && dto.MinLength <= u.Length[1])) &&
+                (dto.MinWidth == null || u.Width == null || 
+                    (u.Width.Length == 1 && dto.MaxWidth >= u.Width[0] && dto.MinWidth <= u.Width[0]) || 
+                    (u.Width.Length == 2 && dto.MaxWidth >= u.Width[0] && dto.MinWidth <= u.Width[1])) &&
+                (dto.MinHeight == null || u.Height == null || 
+                    (u.Height.Length == 1 && dto.MaxHeight >= u.Height[0] && dto.MinHeight <= u.Height[0]) || 
+                    (u.Height.Length == 2 && dto.MaxHeight >= u.Height[0] && dto.MinHeight <= u.Height[1])) &&
+                (dto.MinIndent == null || u.Indent >= dto.MinIndent) &&
+                (dto.MaxIndent == null || u.Indent <= dto.MaxIndent) &&
+                (dto.MinLampCount == null || u.LampCount >= dto.MinLampCount) &&
+                (dto.MaxLampCount == null || u.LampCount <= dto.MaxLampCount) &&
                 (u.ChandelierTypes == null || dto.AdditionalParams == null || u.ChandelierTypes.Any(c => dto.AdditionalParams.Contains(c))) &&
                 (u.Materials == null || dto.Materials == null || u.Materials.Any(c => dto.Materials.Contains(c))) &&
                 (u.PictureMaterial == null || dto.PictureMaterial == null || u.PictureMaterial.Any(c => dto.PictureMaterial.Contains(c))) &&
@@ -938,60 +942,6 @@ namespace vogue_decor.Application.Repositories
                 .Select(c => new { Id = c.Id, Name = c.Name, Count = products.Count(p => productSelector(p) == c.Id) })
                 .Where(x => x.Count > 0)
                 .ToDictionary(x => x.Id, x => new GetFiltersCountResponseDto.FilterDto { Count = x.Count, Name = x.Name });
-        }
-
-        private RangeFilterDto? GetRangeFilterByPrice(IEnumerable<Product> products)
-        {
-            return GetRangeFilterByCriteria<decimal>(products, p => p.Price);
-        }
-
-        private RangeFilterDto? GetRangeFilterByLength(IEnumerable<Product> products)
-        {
-            return GetRangeFilterByCriteria(products, p => p.Length);
-        }
-
-        private RangeFilterDto? GetRangeFilterByDiameter(IEnumerable<Product> products)
-        {
-            return GetRangeFilterByCriteria(products, p => p.Diameter);
-        }
-
-        private RangeFilterDto? GetRangeFilterByHeight(IEnumerable<Product> products)
-        {
-            return GetRangeFilterByCriteria(products, p => p.Height);
-        }
-
-        private RangeFilterDto? GetRangeFilterByWidth(IEnumerable<Product> products)
-        {
-            return GetRangeFilterByCriteria(products, p => p.Width);
-        }
-
-        private RangeFilterDto? GetRangeFilterByIndent(IEnumerable<Product> products)
-        {
-            return GetRangeFilterByCriteria(products, p => p.Indent);
-        }
-
-        private RangeFilterDto? GetRangeFilterByLampCount(IEnumerable<Product> products)
-        {
-            return GetRangeFilterByCriteria(products, p => p.LampCount);
-        }
-
-        private RangeFilterDto? GetRangeFilterByCriteria<T>(IEnumerable<Product> products, Func<Product, T?> productSelector) where T : struct
-        {
-            var values = products.Select(productSelector).Where(v => v is not null).Cast<T>().ToArray();
-            return values.Any()
-                ? new RangeFilterDto { MinValue = Convert.ToDecimal(values.Min()), MaxValue = Convert.ToDecimal(values.Max()) }
-                : null;
-        }
-        
-        private RangeFilterDto? GetRangeFilterByCriteria(IEnumerable<Product> products, Func<Product, decimal[]?> productSelector)
-        {
-            var values = products
-                .SelectMany(p => productSelector(p) ?? Enumerable.Empty<decimal>())
-                .ToArray();
-
-            return values.Any()
-                ? new RangeFilterDto { MinValue = values.Min(), MaxValue = values.Max() }
-                : null;
         }
 
         private static bool CompareNullableArrays(decimal[]? firstArray, decimal[]? secondArray)

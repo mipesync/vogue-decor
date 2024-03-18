@@ -22,33 +22,68 @@ public record GetFiltersCountResponseDto
     /// </summary>
     public Dictionary<int, FilterDto>? Styles { get; set; }
     /// <summary>
-    /// Диапазон цены
+    /// Минимальная цена
     /// </summary>
-    public RangeFilterDto? Prices { get; set; }
+    public decimal? MinPrice { get; set; }
     /// <summary>
-    /// Диапазон длины
+    /// Максимальная цена
     /// </summary>
-    public RangeFilterDto? Length { get; set; }
+    public decimal? MaxPrice { get; set; }
+
     /// <summary>
-    /// Диапазон диаметра
+    /// Минимальная длина
     /// </summary>
-    public RangeFilterDto? Diameter { get; set; }
+    public decimal? MinLength { get; set; }
     /// <summary>
-    /// Диапазон высоты
+    /// Максимальная длина
     /// </summary>
-    public RangeFilterDto? Height { get; set; }
+    public decimal? MaxLength { get; set; }
+
     /// <summary>
-    /// Диапазон ширины
+    /// Минимальный диаметр
     /// </summary>
-    public RangeFilterDto? Width { get; set; }
+    public decimal? MinDiameter { get; set; }
     /// <summary>
-    /// Диапазон отступа
+    /// Максимальный диаметр
     /// </summary>
-    public RangeFilterDto? Indent { get; set; }
+    public decimal? MaxDiameter { get; set; }
+
     /// <summary>
-    /// Диапазон количества лампочек
+    /// Минимальная высота
     /// </summary>
-    public RangeFilterDto? LampCount { get; set; }
+    public decimal? MinHeight { get; set; }
+    /// <summary>
+    /// Максимальная высота
+    /// </summary>
+    public decimal? MaxHeight { get; set; }
+
+    /// <summary>
+    /// Минимальная ширина
+    /// </summary>
+    public decimal? MinWidth { get; set; }
+    /// <summary>
+    /// Максимальная ширина
+    /// </summary>
+    public decimal? MaxWidth { get; set; }
+
+    /// <summary>
+    /// Минимальный отступ
+    /// </summary>
+    public decimal? MinIndent { get; set; }
+    /// <summary>
+    /// Максимальный отступ
+    /// </summary>
+    public decimal? MaxIndent { get; set; }
+
+    /// <summary>
+    /// Минимальное количество лампочек
+    /// </summary>
+    public int? MinLampCount { get; set; }
+    /// <summary>
+    /// Максимальное количество лампочек
+    /// </summary>
+    public int? MaxLampCount { get; set; }
+
     /// <summary>
     /// Количество дополнительных параметров
     /// </summary>
