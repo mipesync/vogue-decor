@@ -23,8 +23,9 @@ namespace vogue_decor.Application.Interfaces.Repositories
         /// Получить корзину
         /// </summary>
         /// <param name="dto">Входные данные</param>
+        /// <param name="hostUrl">Домен API</param>
         /// <returns><see cref="GetCartResponseDto"/></returns>
-        Task<GetCartResponseDto> GetCart(GetUserByIdDto dto);
+        Task<GetCartResponseDto> GetCart(GetUserByIdDto dto, string hostUrl);
         /// <summary>
         /// Очистить корзину
         /// </summary>
@@ -34,8 +35,9 @@ namespace vogue_decor.Application.Interfaces.Repositories
         /// Получить избранные
         /// </summary>
         /// <param name="dto">Входные данные</param>
+        /// <param name="hostUrl">Домен API</param>
         /// <returns><see cref="GetCartResponseDto"/></returns>
-        Task<GetCartResponseDto> GetFavourites(GetUserByIdDto dto);
+        Task<GetCartResponseDto> GetFavourites(GetUserByIdDto dto, string hostUrl);
         /// <summary>
         /// Изменить персональные данные пользователя
         /// </summary>
@@ -45,7 +47,8 @@ namespace vogue_decor.Application.Interfaces.Repositories
         /// Оформить заказ
         /// </summary>
         /// <param name="dto">Входные данные</param>
-        Task OrderPlace(OrderPlaceDto dto);
+        /// <param name="hostUrl">Домен API</param>
+        Task OrderPlace(OrderPlaceDto dto, string hostUrl);
         /// <summary>
         /// Обратная связь
         /// </summary>

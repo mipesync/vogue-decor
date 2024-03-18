@@ -8,6 +8,8 @@ using vogue_decor.Application.Interfaces.Repositories;
 using vogue_decor.Domain;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
+using vogue_decor.Application.Common.Services;
+using vogue_decor.Application.DTOs.ProductDTOs.Response_DTOs;
 
 namespace vogue_decor.Application.Repositories
 {
@@ -57,7 +59,7 @@ namespace vogue_decor.Application.Repositories
             return result;
         }
 
-        public async Task<GetCartResponseDto> GetCart(GetUserByIdDto dto)
+        public async Task<GetCartResponseDto> GetCart(GetUserByIdDto dto, string hostUrl)
         {
             var user = await _dbContext.Users
                 .AsNoTracking()
@@ -71,7 +73,7 @@ namespace vogue_decor.Application.Repositories
             
             var counts = GetCounts(dto.UserId);
 
-            var result = ParseToCart(user.ProductUsers);
+            var result = ParseToCart(user.ProductUsers, hostUrl);
             result.CartCount = counts.cart;
             result.FavouritesCount = counts.favourites;
 
@@ -92,7 +94,7 @@ namespace vogue_decor.Application.Repositories
             await _dbContext.SaveChangesAsync(CancellationToken.None);
         }
 
-        public async Task<GetCartResponseDto> GetFavourites(GetUserByIdDto dto)
+        public async Task<GetCartResponseDto> GetFavourites(GetUserByIdDto dto, string hostUrl)
         {
             var user = await _dbContext.Users
                 .AsNoTracking()
@@ -105,7 +107,7 @@ namespace vogue_decor.Application.Repositories
             
             var counts = GetCounts(dto.UserId);
 
-            var result = ParseToCart(user.Favourites);
+            var result = ParseToCart(user.Favourites, hostUrl);
             result.CartCount = counts.cart;
             result.FavouritesCount = counts.favourites;
 
@@ -126,7 +128,7 @@ namespace vogue_decor.Application.Repositories
             await _dbContext.SaveChangesAsync(CancellationToken.None);
         }
 
-        public async Task OrderPlace(OrderPlaceDto dto)
+        public async Task OrderPlace(OrderPlaceDto dto, string hostUrl)
         {
             var user = await _dbContext.Users
                 .Include(u => u.ProductUsers)
@@ -136,7 +138,7 @@ namespace vogue_decor.Application.Repositories
             if (user is null)
                 throw new NotFoundException(user);
 
-            var cart = ParseToCart(user.ProductUsers);
+            var cart = ParseToCart(user.ProductUsers, hostUrl);
 
             var orderComposition = new StringBuilder();
 
@@ -217,7 +219,7 @@ namespace vogue_decor.Application.Repositories
                 $"{dto.Text}");
         }
 
-        private GetCartResponseDto ParseToCart(List<ProductUser> productUsers)
+        private GetCartResponseDto ParseToCart(List<ProductUser> productUsers, string hostUrl)
         {
             var result = new GetCartResponseDto();
 
@@ -235,6 +237,7 @@ namespace vogue_decor.Application.Repositories
 
                 mappedProduct.Count = count;
                 mappedProduct.Price = productUser.Product.Price;
+                mappedProduct = UrlParse(mappedProduct, hostUrl);
 
                 result.Products.Add(mappedProduct);
             }
@@ -242,7 +245,7 @@ namespace vogue_decor.Application.Repositories
             return result;
         }
 
-        private GetCartResponseDto ParseToCart(List<Favourite> favourites)
+        private GetCartResponseDto ParseToCart(List<Favourite> favourites, string hostUrl)
         {
             var result = new GetCartResponseDto();
 
@@ -260,6 +263,7 @@ namespace vogue_decor.Application.Repositories
 
                 mappedProduct.Count = count;
                 mappedProduct.Price = productUser.Product.Price;
+                mappedProduct = UrlParse(mappedProduct, hostUrl);
 
                 result.Products.Add(mappedProduct);
             }
@@ -273,6 +277,22 @@ namespace vogue_decor.Application.Repositories
             var cartCount = _dbContext.ProductUsers.Count(u => u.UserId == userId);
 
             return (favouritesCount, cartCount);
+        }
+        
+        private static CartResponseDto UrlParse(CartResponseDto product,
+            string hostUrl)
+        {
+            foreach (var file in product.Files.Where(file => file.Url.Contains("small")))
+            {
+                file.Url = UrlParser.Parse(hostUrl, product.Id.ToString(), file.Url)!;
+            }
+            
+            for (var i = 0; i < product.Files.Count; i++)
+            {
+                if (product.Files[i].Name.Contains("default"))
+                    product.Files.Remove(product.Files[i]);
+            }
+            return product;
         }
     }
 }

@@ -216,6 +216,8 @@ namespace vogue_decor.Controllers
         [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
         public async Task<IActionResult> GetByCriteria([FromQuery] GetProductByCriteriaDto dto)
         {
+            if (!ModelState.IsValid) return BadRequest(ModelState); 
+            
             dto.UserId = UserId;
             var result = await _productsRepository.GetByCriteriaAsync(dto, UrlRaw);
 
@@ -235,6 +237,8 @@ namespace vogue_decor.Controllers
         [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
         public async Task<IActionResult> GetByCollectionId([FromQuery] GetProductByCollectionIdDto dto)
         {
+            if (!ModelState.IsValid) return BadRequest(ModelState); 
+
             dto.UserId = UserId;
             var result = await _productsRepository.GetByCollectionIdAsync(dto, UrlRaw);
 
@@ -256,6 +260,8 @@ namespace vogue_decor.Controllers
         [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
         public async Task<IActionResult> GetByArticle([FromQuery] GetByArticleDto dto)
         {
+            if (!ModelState.IsValid) return BadRequest(ModelState); 
+
             dto.UserId = UserId;
             var result = await _productsRepository.GetByArticleAsync(dto, UrlRaw);
 
@@ -275,6 +281,8 @@ namespace vogue_decor.Controllers
         [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
         public async Task<IActionResult> SearchByQuery([FromQuery] SearchProductDto dto)
         {
+            if (!ModelState.IsValid) return BadRequest(ModelState); 
+
             dto.UserId = UserId;
             if (Regex.IsMatch(dto.SearchQuery, "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[-])[a-zA-Z0-9-]+$"))
             {

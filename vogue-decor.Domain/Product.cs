@@ -79,7 +79,7 @@ namespace vogue_decor.Domain
         /// <summary>
         /// Типы люстр
         /// </summary>
-        [XmlElement("chandelierTypes")]
+        [XmlElement("chandelierType")]
         public int[]? ChandelierTypes { get; set; }
         /// <summary>
         /// Рейтинг товара

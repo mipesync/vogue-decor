@@ -31,6 +31,7 @@ namespace vogue_decor.Controllers
             }
         }
         private readonly IUserRepository _userRepository;
+        private string UrlRaw => $"{Request.Scheme}://{Request.Host}";
 
         public UserController(IUserRepository userRepository)
         {
@@ -86,7 +87,7 @@ namespace vogue_decor.Controllers
         [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
         public async Task<IActionResult> GetCart()
         {
-            var result = await _userRepository.GetCart(new GetUserByIdDto { UserId = UserId});
+            var result = await _userRepository.GetCart(new GetUserByIdDto { UserId = UserId}, UrlRaw);
 
             return Ok(result);
         }
@@ -121,7 +122,7 @@ namespace vogue_decor.Controllers
         [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
         public async Task<IActionResult> GetFavourites()
         {
-            var result = await _userRepository.GetFavourites(new GetUserByIdDto { UserId = UserId});
+            var result = await _userRepository.GetFavourites(new GetUserByIdDto { UserId = UserId}, UrlRaw);
 
             return Ok(result);
         }
@@ -161,7 +162,7 @@ namespace vogue_decor.Controllers
         [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
         public async Task<IActionResult> OrderPlace([FromQuery] OrderPlaceDto dto)
         {
-            await _userRepository.OrderPlace(dto);
+            await _userRepository.OrderPlace(dto, UrlRaw);
 
             return Ok();
         }
