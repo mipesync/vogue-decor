@@ -834,8 +834,12 @@ namespace vogue_decor.Application.Repositories
                 (dto.ProductTypes == null || dto.ProductTypes.Contains(u.ProductType)) &&
                 (dto.Categories == null || u.Types.Any(c => dto.Categories.Contains(c))) &&
                 (dto.Styles == null || u.Styles == null || u.Styles.Any(c => dto.Styles.Contains(c))) &&
-                (dto.Prices == null || u.Price >= dto.Prices.MinValue && u.Price <= dto.Prices.MaxValue) &&
-                (dto.Diameter == null || u.Diameter >= dto.Diameter.MinValue && u.Diameter <= dto.Diameter.MaxValue) &&
+                (dto.Prices == null || 
+                    dto.Prices.MaxValue == 0m && u.Price >= dto.Prices.MinValue ||
+                    u.Price >= dto.Prices.MinValue && u.Price <= dto.Prices.MaxValue) &&
+                (dto.Diameter == null || 
+                    dto.Diameter.MaxValue == 0m && u.Diameter >= dto.Diameter.MinValue ||
+                    u.Diameter >= dto.Diameter.MinValue && u.Diameter <= dto.Diameter.MaxValue) &&
                 (dto.Length == null || 
                     u.Length == null || 
                         (u.Length.Length == 1 && dto.Length.MaxValue >= u.Length[0] && dto.Length.MinValue <= u.Length[0]) || 

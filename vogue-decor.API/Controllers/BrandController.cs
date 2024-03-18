@@ -121,8 +121,8 @@ public class BrandController : Controller
     /// <summary>
     /// Получение всех брендов
     /// </summary>
-    /// <param name="skip">Кол-во брендов, которое надо пропустить</param>
-    /// <param name="take">Кол-во брендов, которое надо получить</param>
+    /// <param name="From">Кол-во брендов, которое надо пропустить</param>
+    /// <param name="Count">Кол-во брендов, которое надо получить</param>
     /// <returns><see cref="GetBrandsResponseDto"/></returns>
     /// <response code="200">Запрос выполнен успешно</response>
     /// <response code="404">Бренд не найден</response>
@@ -132,9 +132,9 @@ public class BrandController : Controller
     [SwaggerResponse(statusCode: StatusCodes.Status200OK, type: typeof(GetBrandsResponseDto))]
     [SwaggerResponse(statusCode: StatusCodes.Status404NotFound, type: typeof(ErrorModel))]
     [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
-    public async Task<IActionResult> GetAllAsync([FromQuery] int skip, [FromQuery] int take)
+    public async Task<IActionResult> GetAllAsync([FromQuery] int From, [FromQuery] int Count)
     {
-        var result = await _brandRepository.GetAllAsync(UrlRaw, skip, take);
+        var result = await _brandRepository.GetAllAsync(UrlRaw, From, Count);
 
         return Ok(result);
     }
