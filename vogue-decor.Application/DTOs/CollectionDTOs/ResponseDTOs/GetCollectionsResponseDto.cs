@@ -8,7 +8,7 @@
         /// <summary>
         /// Список коллекций
         /// </summary>
-        public List<CollectionLookupDto> Collections { get; set; } = new List<CollectionLookupDto>();
+        public List<CollectionLookupDto> Collections { get; set; } = new();
         /// <summary>
         /// Общее количество коллекций
         /// </summary>

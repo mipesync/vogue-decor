@@ -33,8 +33,9 @@ namespace vogue_decor.Application.Interfaces.Repositories
         /// Добавить новую коллекцию
         /// </summary>
         /// <param name="dto">Входные данные</param>
+        /// <param name="webRootPath">Корневой путь проекта</param>
         /// <returns><see cref="AddCollectionResponseDto"/></returns>
-        Task<AddCollectionResponseDto> Add(AddCollectionDto dto);
+        Task<AddCollectionResponseDto> Add(AddCollectionDto dto, string webRootPath);
         /// <summary>
         /// Обновить детали коллекции
         /// </summary>

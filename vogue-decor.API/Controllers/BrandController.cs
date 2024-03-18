@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using vogue_decor.Application.DTOs.BrandDTOs;
 using vogue_decor.Application.DTOs.BrandDTOs.ResponseDTOs;
+using vogue_decor.Application.DTOs.CollectionDTOs;
 using vogue_decor.Application.DTOs.ProductDTOs.Response_DTOs;
 using vogue_decor.Application.Interfaces.Repositories;
 using vogue_decor.Attributes;
@@ -154,6 +155,25 @@ public class BrandController : Controller
     public async Task<IActionResult> GetByIdAsync([FromRoute] Guid brandId)
     {
         var result = await _brandRepository.GetByIdAsync(brandId, UrlRaw);
+
+        return Ok(result);
+    }
+    
+    /// <summary>
+    /// Получить коллекцию по идентификатору бренда
+    /// </summary>
+    /// <returns><see cref="CollectionLookupDto"/></returns>
+    /// <response code="200">Запрос выполнен успешно</response>
+    /// <response code="404">Бренд не найден</response>
+    /// <response code="500">Внутренняя ошибка сервера</response>
+    [HttpGet("collections")]
+    [AllowAnonymous]
+    [SwaggerResponse(statusCode: StatusCodes.Status200OK, type: typeof(CollectionLookupDto))]
+    [SwaggerResponse(statusCode: StatusCodes.Status404NotFound, type: typeof(ErrorModel))]
+    [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
+    public async Task<IActionResult> GetByBrandId([FromQuery] GetCollectionsByBrandIdDto dto)
+    {
+        var result = await _brandRepository.GetCollectionsAsync(dto, UrlRaw);
 
         return Ok(result);
     }

@@ -18,5 +18,9 @@
         /// Индекс порядка коллекции
         /// </summary>
         public int? Index { get; set; }
+        /// <summary>
+        /// Идентификатор бренда
+        /// </summary>
+        public Guid BrandId { get; set; }
     }
 }

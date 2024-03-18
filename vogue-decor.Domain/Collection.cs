@@ -14,10 +14,18 @@ namespace vogue_decor.Domain
         /// Порядок коллекции
         /// </summary>
         public int? Index { get; set; }
+        /// <summary>
+        /// Идентификатор бренда
+        /// </summary>
+        public Guid BrandId { get; set; }
 
         /// <summary>
         /// Список товаров из коллекции
         /// </summary>
         public List<Product> Products { get; set; } = new();
+        /// <summary>
+        /// Бренд коллекции
+        /// </summary>
+        public Brand? Brand { get; set; }
     }
 }

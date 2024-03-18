@@ -15,4 +15,8 @@ public class Brand : ISecondaryEntity
     /// Список товаров бренда
     /// </summary>
     public List<Product> Products { get; set; } = new();
+    /// <summary>
+    /// Список коллекций бренда
+    /// </summary>
+    public List<Collection> Collections { get; set; } = new();
 }

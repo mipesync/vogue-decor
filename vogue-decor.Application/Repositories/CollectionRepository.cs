@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Http;
 using vogue_decor.Application.Common.Exceptions;
 using vogue_decor.Application.Common.Services;
 using vogue_decor.Application.DTOs.CollectionDTOs;
@@ -89,13 +90,25 @@ namespace vogue_decor.Application.Repositories
             return result;
         }
 
-        public async Task<AddCollectionResponseDto> Add(AddCollectionDto dto)
+        public async Task<AddCollectionResponseDto> Add(AddCollectionDto dto, string webRootPath)
         {
+            var brand = await _dbContext.Brands.AsNoTracking()
+                .FirstOrDefaultAsync(b => b.Id == dto.BrandId, CancellationToken.None);
+
+            if (brand is null)
+                throw new NotFoundException(brand);
+            
             var collection = new Collection
             {
                 Id = Guid.NewGuid(),
-                Name = dto.Name
+                Name = dto.Name,
+                Url = string.Empty,
+                BrandId = dto.BrandId
             };
+            
+            var fileName = await UploadImageAsync(webRootPath, dto.Url, dto.File, collection.Id);
+        
+            collection.Url = fileName;
 
             await _dbContext.Collections.AddAsync(collection, CancellationToken.None);
             await _dbContext.SaveChangesAsync(CancellationToken.None);
@@ -276,6 +289,21 @@ namespace vogue_decor.Application.Repositories
             }
 
             return dto;
+        }
+
+        private async Task<string> UploadImageAsync(string webRootPath, string? url, IFormFile? file, Guid brandId)
+        {
+            _uploader.WebRootPath = webRootPath is null
+                ? throw new ArgumentException("Корневой путь проекта " +
+                                              "не может быть пустым")
+                : webRootPath;
+            _uploader.AbsolutePath = brandId.ToString();
+            _uploader.FileUrl = url;
+            _uploader.File = file;
+
+            var imageName = await _uploader.UploadFileAsync(mutable: false);
+        
+            return imageName.First();
         }
     }
 }

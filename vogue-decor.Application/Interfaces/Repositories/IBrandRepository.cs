@@ -1,5 +1,7 @@
 ﻿using vogue_decor.Application.DTOs.BrandDTOs;
 using vogue_decor.Application.DTOs.BrandDTOs.ResponseDTOs;
+using vogue_decor.Application.DTOs.CollectionDTOs;
+using vogue_decor.Application.DTOs.CollectionDTOs.ResponseDTOs;
 
 namespace vogue_decor.Application.Interfaces.Repositories;
 
@@ -51,4 +53,11 @@ public interface IBrandRepository
     /// <param name="hostUrl">Домен API</param>
     /// <returns><see cref="BrandResponseDto"/></returns>
     Task<BrandResponseDto> GetByIdAsync(Guid brandId, string hostUrl);
+    /// <summary>
+    /// Получить список коллекций по идентификатору бренда
+    /// </summary>
+    /// <param name="dto">Входные данные</param>
+    /// <param name="hostUrl">Домен API</param>
+    /// <returns><see cref="GetCollectionsResponseDto"/></returns>
+    Task<GetCollectionsResponseDto> GetCollectionsAsync(GetCollectionsByBrandIdDto dto, string hostUrl);
 }

@@ -98,14 +98,16 @@ namespace vogue_decor.Controllers
         /// <param name="dto">Входные данные</param>
         /// <returns><see cref="AddCollectionResponseDto"/></returns>
         /// <response code="200">Запрос выполнен успешно</response>
+        /// <response code="404">Бренд не найден</response>
         /// <response code="500">Внутренняя ошибка сервера</response>
         [HttpPost()]
         [RoleValidate(Roles.ADMIN)]
         [SwaggerResponse(statusCode: StatusCodes.Status200OK, type: typeof(AddCollectionResponseDto))]
+        [SwaggerResponse(statusCode: StatusCodes.Status404NotFound, type: typeof(ErrorModel))]
         [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
-        public async Task<IActionResult> Add([FromBody] AddCollectionDto dto)
+        public async Task<IActionResult> Add([FromForm] AddCollectionDto dto)
         {
-            var result = await _collectionsRepository.Add(dto);
+            var result = await _collectionsRepository.Add(dto, WebRootPath);
 
             return Ok(result);
         }

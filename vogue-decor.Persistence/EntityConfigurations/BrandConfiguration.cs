@@ -16,5 +16,9 @@ public class BrandConfiguration : IEntityTypeConfiguration<Brand>
         builder.HasMany(b => b.Products)
             .WithOne(p => p.Brand)
             .HasForeignKey(p => p.BrandId);
+
+        builder.HasMany(b => b.Collections)
+            .WithOne(c => c.Brand)
+            .HasForeignKey(c => c.BrandId);
     }
 }
