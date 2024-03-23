@@ -21,7 +21,8 @@
         <url>Ссылка на изображение 1</url> <!-- Обязательный -->
         <url>Ссылка на изображение 2</url>
         <height>Высота товара</height>
-        <length>Длина товара</length>
+        <length>Минимальная длина товара</length>
+        <length>Максимальная длина товара</length>
         <width>Ширина товара</width>
         <diameter>Диаметр товара</diameter>
         <pictureMaterial>Материал рамки картины 1</pictureMaterial>

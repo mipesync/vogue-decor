@@ -84,9 +84,9 @@ public class GetProductByCriteriaDto
     /// </summary>
     public int? MaxLampCount { get; set; }
     /// <summary>
-    /// Выбранные дополнительные параметры
+    /// Типы люстр
     /// </summary>
-    public int[]? AdditionalParams { get; set; }
+    public int[]? ChandelierTypes { get; set; }
     /// <summary>
     /// Выбранные материалы
     /// </summary>

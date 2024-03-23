@@ -221,7 +221,7 @@ namespace vogue_decor.Application.Repositories
                 MaxIndent = products.Select(p => p.Indent).Max(),
                 MinLampCount = products.Select(p => p.LampCount).Min(),
                 MaxLampCount = products.Select(p => p.LampCount).Max(),
-                AdditionalParams = GetFiltersByAdditionalParams(products),
+                ChandelierTypes = GetFiltersByChandelierTypes(products),
                 Materials = GetFiltersByMaterials(products),
                 PictureMaterial = GetFiltersByPictureMaterials(products),
                 Brands = GetFiltersByBrands(products),
@@ -371,25 +371,31 @@ namespace vogue_decor.Application.Repositories
         public async Task<GetProductsResponseDto> SearchAsync(SearchProductDto dto, string hostUrl)
         {
             var searchQuery = dto.SearchQuery.Trim();
+            var article = "";
             
-            if (long.TryParse(searchQuery, out _))
+            if (long.TryParse(searchQuery, out var code))
             {
-                var product = await GetByCodeAsync(new GetByCodeDto
+                if (code.ToString().Length == 8)
                 {
-                    Code = searchQuery,
-                    UserId = dto.UserId
-                }, hostUrl);
-
-                return product;
+                    return await GetByCodeAsync(new GetByCodeDto
+                    {
+                        Code = searchQuery,
+                        UserId = dto.UserId
+                    }, hostUrl);
+                }
+                
+                article = await _dbContext.Products.Select(p => p.Article)
+                    .FirstOrDefaultAsync(p => p.Contains(code.ToString()), CancellationToken.None);
             }
             
-            var article = FindArticle(dto.SearchQuery);
+            if (article == string.Empty)
+                article = FindArticle(dto.SearchQuery);
             
             var strQueryWithoutArticle = article != string.Empty ? string.Join("", searchQuery.Replace($" {article}", "")).Trim() : searchQuery;
             
             var products = await GetOrderedProductsAsync(sortType: dto.SortType, searchQuery: strQueryWithoutArticle, article: article);
             
-            if (products.Count == 0 && article == searchQuery.Trim())
+            if (products.Count == 0 /*&& article == searchQuery.Trim()*/)
             {
                 if (article != string.Empty)
                 {
@@ -656,9 +662,20 @@ namespace vogue_decor.Application.Repositories
         private static List<ProductShortResponseDto> UrlParse(List<ProductShortResponseDto> products,
             string hostUrl)
         {
-            for (int i = 0; i < products.Count; i++)
+            foreach (var product in products)
             {
-                products[i].Urls = new[] { UrlParser.Parse(hostUrl, products[i].Id.ToString(), products[i].Urls[1]) };
+                if (product.Urls is not null)
+                {
+                    var parsedUrls = new List<string>();
+
+                    foreach (var t in product.Urls)
+                    {
+                        if (t.Contains("small"))
+                            parsedUrls.Add(UrlParser.Parse(hostUrl, product.Id.ToString(), t)!);
+                    }
+
+                    product.Urls = parsedUrls.ToArray();
+                }
             }
             return products;
         }
@@ -666,13 +683,20 @@ namespace vogue_decor.Application.Repositories
         private static ProductResponseDto UrlParse(ProductResponseDto product,
             string hostUrl)
         {
-            for (int i = 0; i < product.Files.Count; i++)
+            var files = new List<FileDto>();
+            
+            foreach (var file in product.Files)
             {
-                if (product.Files[i].Url.Contains("default"))
-                    product.Files[i].Url = UrlParser.Parse(hostUrl, product.Id.ToString(), product.Files[i].Url)!;
-                else
-                    product.Files.Remove(product.Files[i]);
+                if (file.Url.Contains("default"))
+                    files.Add(new FileDto
+                    {
+                        Name = file.Name,
+                        Url = UrlParser.Parse(hostUrl, product.Id.ToString(), file.Url)!
+                    });
             }
+
+            product.Files = files; 
+            
             return product;
         }
 
@@ -858,7 +882,7 @@ namespace vogue_decor.Application.Repositories
                 (dto.MaxIndent == null || u.Indent <= dto.MaxIndent) &&
                 (dto.MinLampCount == null || u.LampCount >= dto.MinLampCount) &&
                 (dto.MaxLampCount == null || u.LampCount <= dto.MaxLampCount) &&
-                (u.ChandelierTypes == null || dto.AdditionalParams == null || u.ChandelierTypes.Any(c => dto.AdditionalParams.Contains(c))) &&
+                (u.ChandelierTypes == null || dto.ChandelierTypes == null || u.ChandelierTypes.Any(c => dto.ChandelierTypes.Contains(c))) &&
                 (u.Materials == null || dto.Materials == null || u.Materials.Any(c => dto.Materials.Contains(c))) &&
                 (u.PictureMaterial == null || dto.PictureMaterial == null || u.PictureMaterial.Any(c => dto.PictureMaterial.Contains(c))) &&
                 (dto.IsSale == null || u.Discount > 0 == dto.IsSale || u.Discount != null == dto.IsSale) &&
@@ -895,7 +919,7 @@ namespace vogue_decor.Application.Repositories
             return GetFiltersByCriteria(products, p => p.Styles ?? Enumerable.Empty<int>(), _dbContext.Styles.AsNoTracking());
         }
 
-        private Dictionary<int, GetFiltersCountResponseDto.FilterDto> GetFiltersByAdditionalParams(IEnumerable<Product> products)
+        private Dictionary<int, GetFiltersCountResponseDto.FilterDto> GetFiltersByChandelierTypes(IEnumerable<Product> products)
         {
             return GetFiltersByCriteria(products, p => p.ChandelierTypes ?? Enumerable.Empty<int>(), _dbContext.ChandelierTypes.AsNoTracking());
         }

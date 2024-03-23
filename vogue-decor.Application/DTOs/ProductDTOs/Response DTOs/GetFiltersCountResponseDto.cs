@@ -87,7 +87,7 @@ public record GetFiltersCountResponseDto
     /// <summary>
     /// Количество дополнительных параметров
     /// </summary>
-    public Dictionary<int, FilterDto>? AdditionalParams { get; set; }
+    public Dictionary<int, FilterDto>? ChandelierTypes { get; set; }
     /// <summary>
     /// Количество материалов
     /// </summary>
