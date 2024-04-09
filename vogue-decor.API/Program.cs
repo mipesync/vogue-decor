@@ -39,9 +39,9 @@ builder.Services.AddCors(options => options.AddPolicy("AllowAllOrigins", builder
     builder.AllowAnyHeader();
     builder.AllowAnyMethod();
     builder.WithOrigins("http://localhost:3000", "https://localhost:3000",
-        "http://95.163.228.120:3000", "https://95.163.228.120:3000", 
-        "http://95.163.228.120", "https://95.163.228.120", 
-        "http://butterflylc.ru", "https://butterflylc.ru");
+        "http://79.174.80.7:3000", "https://79.174.80.7:3000", 
+        "http://79.174.80.7", "https://79.174.80.7", 
+        "http://toplight.pro", "https://toplight.pro");
     builder.AllowCredentials();
 }));
 

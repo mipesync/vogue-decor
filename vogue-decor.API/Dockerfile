@@ -3,7 +3,11 @@
 FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
 WORKDIR /app
 EXPOSE 80
-EXPOSE 5896
+EXPOSE 7217
+EXPOSE 7216
+EXPOSE 2525
+EXPOSE 587
+EXPOSE 465
 EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build

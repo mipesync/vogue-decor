@@ -12,7 +12,7 @@ services:
             context: .
             dockerfile: vogue-decor.API/Dockerfile
         ports:
-            - "7216:7216"
+            - "7217:7216"
         networks:
             - api-network
         depends_on:
