@@ -30,7 +30,8 @@ builder.Services.AddAuthenticationService(jwtOptions);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddPersistenceService(connectionString, builder.Configuration);
+builder.Services.AddPersistenceService(connectionString, builder.Configuration, builder.Services.BuildServiceProvider().GetService<ILogger<Program>>()!);
+
 builder.Services.AddApplication(jwtOptions);
 builder.Services.AddSwaggerService();
 

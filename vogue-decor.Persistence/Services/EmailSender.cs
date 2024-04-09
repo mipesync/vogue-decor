@@ -1,6 +1,7 @@
 ﻿using vogue_decor.Application.Common.Options;
 using vogue_decor.Application.Interfaces;
 using MailKit.Net.Smtp;
+using Microsoft.Extensions.Logging;
 using MimeKit;
 
 namespace vogue_decor.Persistence.Services
@@ -9,14 +10,16 @@ namespace vogue_decor.Persistence.Services
     public class EmailSender : IEmailSender
     {
         private readonly EmailSenderOptions _options;
+        private readonly ILogger _logger;
 
         /// <summary>
         /// Инициализация начальных параметров
         /// </summary>
         /// <param name="emailSenderOptions">Конфигурация проекта</param>
-        public EmailSender(EmailSenderOptions emailSenderOptions)
+        public EmailSender(EmailSenderOptions emailSenderOptions, ILogger logger)
         {
             _options = emailSenderOptions;
+            _logger = logger;
         }
 
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
@@ -33,10 +36,15 @@ namespace vogue_decor.Persistence.Services
 
             using (var client = new SmtpClient())
             {
-
+                _logger.LogInformation("start connection...");
                 await client.ConnectAsync(_options.Host, _options.Port, false);
+                _logger.LogInformation("successfully connected!");
+                _logger.LogInformation("start authentication...");
                 await client.AuthenticateAsync(_options.Username, _options.Password);
+                _logger.LogInformation("successfully authenticated!");
+                _logger.LogInformation("start send...");
                 await client.SendAsync(emailMessage);
+                _logger.LogInformation("successfully sended!");
 
                 await client.DisconnectAsync(true);
             }

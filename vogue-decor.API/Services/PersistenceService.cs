@@ -6,7 +6,7 @@ namespace vogue_decor.Services
     public static class PersistenceService
     {
         public static IServiceCollection AddPersistenceService(this IServiceCollection services,
-            string connectionString, IConfiguration configuration)
+            string connectionString, IConfiguration configuration, ILogger logger)
         {
             services.AddPersistence(connectionString,
                 new EmailSenderOptions
@@ -16,7 +16,7 @@ namespace vogue_decor.Services
                     Password = configuration["SMTP:Password"]!,
                     Host = configuration["SMTP:Host"]!,
                     Port = Convert.ToInt32(configuration["SMTP:Port"])
-                });
+                }, logger);
 
             return services;
         }
