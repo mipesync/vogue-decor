@@ -26,7 +26,7 @@ namespace vogue_decor.Persistence.Services
         {
             var emailMessage = new MimeMessage();
 
-            emailMessage.From.Add(new MailboxAddress(_options.Name, _options.Username));
+            emailMessage.From.Add(new MailboxAddress(_options.Name, _options.Domain));
             emailMessage.To.Add(new MailboxAddress("", email));
             emailMessage.Subject = subject;
             emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
@@ -36,13 +36,11 @@ namespace vogue_decor.Persistence.Services
 
             using (var client = new SmtpClient())
             {
-                _logger.LogInformation("start connection...");
-                await client.ConnectAsync(_options.Host, _options.Port, false);
-                _logger.LogInformation("successfully connected!");
-                _logger.LogInformation("start authentication...");
+                _logger.LogInformation("start smtp connection...");
+                await client.ConnectAsync(_options.Host, _options.Port, _options.UseSSL);
+                _logger.LogInformation("start smtp authentication...");
                 await client.AuthenticateAsync(_options.Username, _options.Password);
-                _logger.LogInformation("successfully authenticated!");
-                _logger.LogInformation("start send...");
+                _logger.LogInformation("start smtp send...");
                 await client.SendAsync(emailMessage);
                 _logger.LogInformation("successfully sended!");
 
@@ -54,7 +52,7 @@ namespace vogue_decor.Persistence.Services
         {
             var emailMessage = new MimeMessage();
 
-            emailMessage.From.Add(new MailboxAddress("Служба безопасности", _options.Username));
+            emailMessage.From.Add(new MailboxAddress("Служба безопасности", _options.Domain));
             emailMessage.To.Add(new MailboxAddress("", _options.Username));
             emailMessage.Subject = subject;
             emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
