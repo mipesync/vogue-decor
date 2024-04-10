@@ -1,3 +1,4 @@
+using System.Net;
 using vogue_decor.Application;
 using vogue_decor.Application.DTOs;
 using vogue_decor.Domain;
@@ -34,6 +35,15 @@ builder.Services.AddPersistenceService(connectionString, builder.Configuration, 
 
 builder.Services.AddApplication(jwtOptions);
 builder.Services.AddSwaggerService();
+
+builder.WebHost.ConfigureKestrel((context, options) =>
+{
+    options.Listen(IPAddress.Any, 443, listenOptions =>
+    {
+        listenOptions.UseHttps(builder.Configuration["ASPNETCORE_Kestrel__Certificates__Default__Path"]!, 
+            builder.Configuration["ASPNETCORE_Kestrel__Certificates__Default__Password"]!);
+    });
+});
 
 builder.Services.AddCors(options => options.AddPolicy("AllowAllOrigins", builder =>
 {
