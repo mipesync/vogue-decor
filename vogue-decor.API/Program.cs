@@ -38,10 +38,10 @@ builder.Services.AddSwaggerService();
 
 builder.WebHost.ConfigureKestrel((context, options) =>
 {
-    options.Listen(IPAddress.Any, 443, listenOptions =>
-    {
-        listenOptions.UseHttps(builder.Configuration["ASPNETCORE_Kestrel__Certificates__Default__Path"]!, 
-            builder.Configuration["ASPNETCORE_Kestrel__Certificates__Default__Password"]!);
+    options.Listen(IPAddress.Any, 7216, listenOptions =>
+    {        
+        listenOptions.UseHttps(builder.Configuration["ASPNETCORE_Kestrel_Certificates_Default_Path"]!, 
+            builder.Configuration["ASPNETCORE_Kestrel_Certificates_Default_Password"]!);
     });
 });
 

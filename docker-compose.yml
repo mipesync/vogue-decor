@@ -29,11 +29,11 @@ services:
             SMTP:Host: $SMTP_Host
             SMTP:Domain: $SMTP_Domain
             SMTP:UseSSL: $SMTP_UseSSL
-            ASPNETCORE_Kestrel__Certificates__Default__Path: $ASPNETCORE_Kestrel__Certificates__Default__Path
-            ASPNETCORE_Kestrel__Certificates__Default__Password: $ASPNETCORE_Kestrel__Certificates__Default__Password
+            ASPNETCORE_Kestrel_Certificates_Default_Path: $ASPNETCORE_Kestrel_Certificates_Default_Path
+            ASPNETCORE_Kestrel_Certificates_Default_Password: $ASPNETCORE_Kestrel_Certificates_Default_Password
         volumes:
             - /root/backend/vogue-decor/vogue-decor.API/wwwroot:/app/wwwroot
-            - /toplight.pro.pfx:/app/toplight.pro.pfx
+            - /root/backend/vogue-decor/api.pfx:/app/api.pfx
     
     postgres_db:
         container_name: postgres
