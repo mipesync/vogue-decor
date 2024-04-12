@@ -71,6 +71,8 @@ namespace vogue_decor.Application.Common.Mappings.MappingProfiles
                 .ForMember(dto => dto.Quantity, opt => opt.MapFrom(product => product.ProductUsers.Count));
 
             CreateMap<Product, ProductResponseDto>(MemberList.Source)
+                .ForMember(dto => dto.Collection, opt => opt.Ignore())
+                .ForMember(dto => dto.Brand, opt => opt.Ignore())
                 .ForMember(dto => dto.IsFavourite, opt =>
                     opt.MapFrom((product, dto, isFavourite, context) =>
                     {
