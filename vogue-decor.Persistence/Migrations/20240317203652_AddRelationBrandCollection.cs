@@ -30,6 +30,10 @@ namespace vogue_decor.Persistence.Migrations
                 principalTable: "Brands",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.Sql("ALTER TABLE \"Products\" ALTER COLUMN \"Width\" TYPE numeric[] USING ARRAY[\"Width\"];");
+            migrationBuilder.Sql("ALTER TABLE \"Products\" ALTER COLUMN \"Height\" TYPE numeric[] USING ARRAY[\"Height\"];");
+            migrationBuilder.Sql("ALTER TABLE \"Products\" ALTER COLUMN \"Length\" TYPE numeric[] USING ARRAY[\"Length\"];");
         }
 
         /// <inheritdoc />

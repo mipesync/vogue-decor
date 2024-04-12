@@ -12,6 +12,10 @@ namespace vogue_decor.Application.Common.Options
         /// </summary>
         public string Name { get; set; } = string.Empty;
         /// <summary>
+        /// Домен отправителя
+        /// </summary>
+        public string Domain { get; set; } = string.Empty;
+        /// <summary>
         /// Имя пользователя от SMTP клиента
         /// </summary>
         public string Username { get; set; } = string.Empty;
@@ -27,5 +31,9 @@ namespace vogue_decor.Application.Common.Options
         /// Порт SMTP клиента
         /// </summary>
         public int Port { get; set; } = int.MaxValue;
+        /// <summary>
+        /// Использовать ли SSL
+        /// </summary>
+        public bool UseSSL { get; set; } = false;
     }
 }

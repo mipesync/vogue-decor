@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using NpgsqlTypes;
 using vogue_decor.Application.Common.Exceptions;
 using vogue_decor.Application.Common.Services;
+using vogue_decor.Application.DTOs.BrandDTOs;
+using vogue_decor.Application.DTOs.CollectionDTOs;
 using vogue_decor.Application.DTOs.ProductDTOs;
 using vogue_decor.Application.DTOs.ProductDTOs.Response_DTOs;
 using vogue_decor.Application.Interfaces;
@@ -155,6 +157,8 @@ namespace vogue_decor.Application.Repositories
 
             if (product is null)
                 throw new NotFoundException(product);
+            
+            product.Brand = await _dbContext.Brands.FirstOrDefaultAsync(u => u.Id == product.BrandId, CancellationToken.None);
 
             var counts = GetCounts(dto.UserId);
 
@@ -162,6 +166,25 @@ namespace vogue_decor.Application.Repositories
             {
                 opt.Items["userId"] = dto.UserId;
             });
+
+            if (product.CollectionId != null)
+            {
+                var collection = await _dbContext.Collections.FirstOrDefaultAsync(u => u.Id == product.CollectionId, CancellationToken.None);
+                
+                result.Collection = collection is null ? null : new ShortCollectionDto
+                {
+                    Id = collection.Id,
+                    Name = collection.Name
+                };
+            }
+            
+            var brand = await _dbContext.Brands.FirstOrDefaultAsync(u => u.Id == product.BrandId, CancellationToken.None);
+                
+            result.Brand = brand is null ? null : new ShortBrandDto
+            {
+                Id = brand.Id,
+                Name = brand.Name
+            };
 
             result = UrlParse(result, hostUrl);
             result.CartCount = counts.cart;
@@ -373,7 +396,7 @@ namespace vogue_decor.Application.Repositories
             var searchQuery = dto.SearchQuery.Trim();
             var article = "";
             
-            if (long.TryParse(searchQuery, out var code))
+            if (searchQuery.Length > 6 && long.TryParse(searchQuery, out var code))
             {
                 if (code.ToString().Length == 8)
                 {
@@ -395,7 +418,7 @@ namespace vogue_decor.Application.Repositories
             
             var products = await GetOrderedProductsAsync(sortType: dto.SortType, searchQuery: strQueryWithoutArticle, article: article);
             
-            if (products.Count == 0 /*&& article == searchQuery.Trim()*/)
+            if (products.Count == 0 && article!.Trim() == searchQuery.Trim())
             {
                 if (article != string.Empty)
                 {
