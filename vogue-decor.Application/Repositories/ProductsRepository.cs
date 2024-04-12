@@ -396,7 +396,7 @@ namespace vogue_decor.Application.Repositories
             var searchQuery = dto.SearchQuery.Trim();
             var article = "";
             
-            if (long.TryParse(searchQuery, out var code))
+            if (searchQuery.Length > 6 && long.TryParse(searchQuery, out var code))
             {
                 if (code.ToString().Length == 8)
                 {
@@ -418,7 +418,7 @@ namespace vogue_decor.Application.Repositories
             
             var products = await GetOrderedProductsAsync(sortType: dto.SortType, searchQuery: strQueryWithoutArticle, article: article);
             
-            if (products.Count == 0 /*&& article == searchQuery.Trim()*/)
+            if (products.Count == 0 && article!.Trim() == searchQuery.Trim())
             {
                 if (article != string.Empty)
                 {
