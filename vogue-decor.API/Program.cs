@@ -36,14 +36,14 @@ builder.Services.AddPersistenceService(connectionString, builder.Configuration, 
 builder.Services.AddApplication(jwtOptions);
 builder.Services.AddSwaggerService();
 
-// builder.WebHost.ConfigureKestrel((context, options) =>
-// {
-//     options.Listen(IPAddress.Any, 7216, listenOptions =>
-//     {        
-//         listenOptions.UseHttps(builder.Configuration["ASPNETCORE_Kestrel_Certificates_Default_Path"]!, 
-//             builder.Configuration["ASPNETCORE_Kestrel_Certificates_Default_Password"]!);
-//     });
-// });
+builder.WebHost.ConfigureKestrel((context, options) =>
+{
+    options.Listen(IPAddress.Any, 7216, listenOptions =>
+    {        
+        listenOptions.UseHttps(builder.Configuration["ASPNETCORE_Kestrel_Certificates_Default_Path"]!, 
+            builder.Configuration["ASPNETCORE_Kestrel_Certificates_Default_Password"]!);
+    });
+});
 
 builder.Services.AddCors(options => options.AddPolicy("AllowAllOrigins", builder =>
 {
