@@ -55,9 +55,13 @@ namespace vogue_decor.Persistence.Services
                 path = Path.Combine(AbsolutePath, fullName);
                 smallPath = Path.Combine(AbsolutePath, smallFullName);
 
-                using var client = new HttpClient();
+                using var client = new HttpClient
+                {
+                    Timeout = TimeSpan.FromSeconds(300)
+                };
+                Console.WriteLine("Getting stream");
                 await using var stream = await client.GetStreamAsync(FileUrl);
-                
+                Console.WriteLine("Success!");
                 
                 using var image = await Image.LoadAsync(stream);
                 await image.SaveAsync(Path.Combine(WebRootPath, path));

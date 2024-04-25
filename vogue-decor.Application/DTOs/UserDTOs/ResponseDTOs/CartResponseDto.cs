@@ -1,5 +1,8 @@
-﻿using vogue_decor.Application.DTOs.ProductDTOs;
+﻿using vogue_decor.Application.DTOs.BrandDTOs;
+using vogue_decor.Application.DTOs.CollectionDTOs;
+using vogue_decor.Application.DTOs.ProductDTOs;
 using vogue_decor.Application.DTOs.ProductDTOs.Response_DTOs;
+using vogue_decor.Domain;
 
 namespace vogue_decor.Application.DTOs.UserDTOs.ResponseDTOs;
 
@@ -74,10 +77,6 @@ public class CartResponseDto : ProductResponseDto
     /// </summary>
     public int Availability { get; set; } = 0;
     /// <summary>
-    /// Идентификатор коллекции
-    /// </summary>
-    public Guid? CollectionId { get; set; }
-    /// <summary>
     /// Файлы товара (фото, видео)
     /// </summary>
     public List<FileDto> Files { get; set; } = new();
@@ -105,4 +104,12 @@ public class CartResponseDto : ProductResponseDto
     /// Количество товара
     /// </summary>
     public int Count { get; set; } = 0;
+    /// <summary>
+    /// Коллекция товара
+    /// </summary>
+    public ShortCollectionDto? Collection { get; set; }
+    /// <summary>
+    /// Бренд товара
+    /// </summary>
+    public ShortBrandDto? Brand { get; set; }
 }

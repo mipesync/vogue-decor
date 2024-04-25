@@ -151,7 +151,9 @@ namespace vogue_decor.Application.Common.Mappings.MappingProfiles
                 }))
                 .ForMember(dto => dto.Quantity, opt => opt.MapFrom(product => product.ProductUsers.Count))
                 .ForMember(dto => dto.Code, opt => opt.MapFrom(product => long.Parse(product.Code)));
-
+            CreateMap<Product, CartResponseDto>(MemberList.Source)
+                .ForMember(dto => dto.Collection, opt => opt.Ignore())
+                .ForMember(dto => dto.Brand, opt => opt.Ignore());
         }
     }
 }

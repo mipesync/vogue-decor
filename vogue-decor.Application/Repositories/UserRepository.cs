@@ -9,6 +9,8 @@ using vogue_decor.Domain;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 using vogue_decor.Application.Common.Services;
+using vogue_decor.Application.DTOs.BrandDTOs;
+using vogue_decor.Application.DTOs.CollectionDTOs;
 using vogue_decor.Application.DTOs.ProductDTOs.Response_DTOs;
 
 namespace vogue_decor.Application.Repositories
@@ -64,8 +66,14 @@ namespace vogue_decor.Application.Repositories
             var user = await _dbContext.Users
                 .AsNoTracking()
                 .Include(u => u.ProductUsers)
-                .ThenInclude(u => u.Product)
-                .ThenInclude(u => u.Favourites)
+                    .ThenInclude(pu => pu.Product)
+                        .ThenInclude(p => p.Favourites)
+                .Include(u => u.ProductUsers)
+                    .ThenInclude(pu => pu.Product)
+                        .ThenInclude(p => p.Brand)
+                .Include(u => u.ProductUsers)
+                    .ThenInclude(pu => pu.Product)
+                        .ThenInclude(p => p.Collection)
                 .FirstOrDefaultAsync(u => u.Id == dto.UserId);
 
             if (user is null)
@@ -74,6 +82,26 @@ namespace vogue_decor.Application.Repositories
             var counts = GetCounts(dto.UserId);
 
             var result = ParseToCart(user.ProductUsers, hostUrl);
+
+            foreach (var productUser in user.ProductUsers)
+            {
+                foreach (var resultProduct in result.Products.Where(resultProduct => productUser.ProductId == resultProduct.Id))
+                {
+                    if (productUser.Product.Collection is not null)
+                        resultProduct.Collection = new ShortCollectionDto
+                        {
+                            Id = productUser.Product.Collection.Id,
+                            Name = productUser.Product.Collection.Name
+                        };
+                    if (productUser.Product.Brand is not null)
+                        resultProduct.Brand = new ShortBrandDto
+                        {
+                            Id = productUser.Product.Brand.Id,
+                            Name = productUser.Product.Brand.Name
+                        };
+                }
+            }
+            
             result.CartCount = counts.cart;
             result.FavouritesCount = counts.favourites;
 

@@ -1,4 +1,6 @@
-﻿namespace vogue_decor.Domain
+﻿using System.Text.Json.Serialization;
+
+namespace vogue_decor.Domain
 {
     /// <summary>
     /// Класс корзины пользователя
@@ -21,10 +23,12 @@
         /// <summary>
         /// Пользователь
         /// </summary>
+        [JsonIgnore]
         public User User { get; set; } = new User();
         /// <summary>
         /// Товар
         /// </summary>
+        [JsonIgnore]
         public Product Product { get; set; } = new Product();
     }
 }
