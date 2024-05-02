@@ -49,6 +49,12 @@ namespace vogue_decor.Application.Repositories
             var brand = GetBrandsByIdAsync(new [] { dto.BrandId }).Result.FirstOrDefault();
             if (brand is null)
                 throw new NotFoundException(brand);
+
+            var collection = await _dbContext.Collections.FirstOrDefaultAsync(i => i.Id == dto.CollectionId, CancellationToken.None);
+            if (collection is null)
+                throw new NotFoundException(collection);
+            if (collection.BrandId != brand.Id)
+                throw new BadRequestException($"Brand '{brand.Id}' doesn't contains collection {collection.Id}");
             
             var colors = await GetColorsByIdAsync(dto.Colors);
 
@@ -908,7 +914,7 @@ namespace vogue_decor.Application.Repositories
                 (u.ChandelierTypes == null || dto.ChandelierTypes == null || u.ChandelierTypes.Any(c => dto.ChandelierTypes.Contains(c))) &&
                 (u.Materials == null || dto.Materials == null || u.Materials.Any(c => dto.Materials.Contains(c))) &&
                 (u.PictureMaterial == null || dto.PictureMaterial == null || u.PictureMaterial.Any(c => dto.PictureMaterial.Contains(c))) &&
-                (dto.IsSale == null || u.Discount > 0 == dto.IsSale || u.Discount != null == dto.IsSale) &&
+                (dto.IsSale == null || u.Discount > 0 == dto.IsSale || (u.Discount != null && u.Discount != 0) == dto.IsSale) &&
                 (dto.BrandsId == null || dto.BrandsId.Contains(u.BrandId)) &&
                 (dto.CollectionsId == null || dto.CollectionsId.Contains((Guid)u.CollectionId!));
         }

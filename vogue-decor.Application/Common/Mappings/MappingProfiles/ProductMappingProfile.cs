@@ -38,7 +38,7 @@ namespace vogue_decor.Application.Common.Mappings.MappingProfiles
                 .ForMember(dest => dest.Availability, opt => opt.Condition(u => u.Availability != null))
                 .ForMember(dest => dest.CollectionId, opt => opt.Condition(u => u.CollectionId != null))
                 .ForMember(dest => dest.Types, opt => opt.Condition(u => u.Categories != null))
-                .ForMember(dest => dest.Discount, opt => opt.Condition(u => u.Discount != null))
+                .ForMember(dest => dest.Discount, opt => opt.Condition(u => u.Discount is > 0))
                 .ForMember(dest => dest.Styles, opt => opt.Condition(u => u.Styles != null))
                 .ForMember(dest => dest.Materials, opt => opt.Condition(u => u.Materials != null))
                 .ForMember(dest => dest.BrandId, opt => opt.Condition(u => u.BrandId != null))
@@ -113,6 +113,8 @@ namespace vogue_decor.Application.Common.Mappings.MappingProfiles
             
             CreateMap<ProductResponseDto, ProductShortResponseDto>(MemberList.Source);
             CreateMap<Product, CartResponseDto>(MemberList.Source)
+                .ForMember(dto => dto.Collection, opt => opt.Ignore())
+                .ForMember(dto => dto.Brand, opt => opt.Ignore())
                 .ForMember(dto => dto.Length, opt => opt.MapFrom(prod => prod.Length))
                 .ForMember(dto => dto.IsFavourite, opt =>
                     opt.MapFrom((product, dto, isFavourite, context) =>
@@ -151,9 +153,6 @@ namespace vogue_decor.Application.Common.Mappings.MappingProfiles
                 }))
                 .ForMember(dto => dto.Quantity, opt => opt.MapFrom(product => product.ProductUsers.Count))
                 .ForMember(dto => dto.Code, opt => opt.MapFrom(product => long.Parse(product.Code)));
-            CreateMap<Product, CartResponseDto>(MemberList.Source)
-                .ForMember(dto => dto.Collection, opt => opt.Ignore())
-                .ForMember(dto => dto.Brand, opt => opt.Ignore());
         }
     }
 }

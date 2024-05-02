@@ -61,6 +61,9 @@ namespace vogue_decor.Middlewares.ExceptionMiddleware
             });
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = statusCode;
+
+            Console.WriteLine($"Message: {exception.Message}\n InnerMessage: {exception.InnerException}");
+            
             return context.Response.WriteAsync(result);
         }
     }
