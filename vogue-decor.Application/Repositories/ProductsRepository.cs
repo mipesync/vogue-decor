@@ -886,7 +886,6 @@ namespace vogue_decor.Application.Repositories
             return categories;
         }
 
-
         private static Expression<Func<Product, bool>> BuildLinqExpression(GetProductByCriteriaDto dto)
         {
             return u => 
@@ -894,27 +893,24 @@ namespace vogue_decor.Application.Repositories
                 (dto.ProductTypes == null || dto.ProductTypes.Contains(u.ProductType)) &&
                 (dto.Categories == null || u.Types.Any(c => dto.Categories.Contains(c))) &&
                 (dto.Styles == null || u.Styles == null || u.Styles.Any(c => dto.Styles.Contains(c))) &&
-                (dto.MinPrice == null || u.Price >= dto.MinPrice) &&
-                (dto.MaxPrice == null || u.Price <= dto.MaxPrice) &&
-                (dto.MinDiameter == null || u.Diameter >= dto.MinDiameter) &&
-                (dto.MaxDiameter == null || u.Diameter <= dto.MaxDiameter) &&
-                (dto.MinLength == null || u.Length == null || 
-                    (u.Length.Length == 1 && dto.MaxLength >= u.Length[0] && dto.MinLength <= u.Length[0]) || 
-                    (u.Length.Length == 2 && dto.MaxLength >= u.Length[0] && dto.MinLength <= u.Length[1])) &&
-                (dto.MinWidth == null || u.Width == null || 
-                    (u.Width.Length == 1 && dto.MaxWidth >= u.Width[0] && dto.MinWidth <= u.Width[0]) || 
-                    (u.Width.Length == 2 && dto.MaxWidth >= u.Width[0] && dto.MinWidth <= u.Width[1])) &&
-                (dto.MinHeight == null || u.Height == null || 
-                    (u.Height.Length == 1 && dto.MaxHeight >= u.Height[0] && dto.MinHeight <= u.Height[0]) || 
-                    (u.Height.Length == 2 && dto.MaxHeight >= u.Height[0] && dto.MinHeight <= u.Height[1])) &&
-                (dto.MinIndent == null || u.Indent >= dto.MinIndent) &&
-                (dto.MaxIndent == null || u.Indent <= dto.MaxIndent) &&
-                (dto.MinLampCount == null || u.LampCount >= dto.MinLampCount) &&
-                (dto.MaxLampCount == null || u.LampCount <= dto.MaxLampCount) &&
-                (u.ChandelierTypes == null || dto.ChandelierTypes == null || u.ChandelierTypes.Any(c => dto.ChandelierTypes.Contains(c))) &&
-                (u.Materials == null || dto.Materials == null || u.Materials.Any(c => dto.Materials.Contains(c))) &&
-                (u.PictureMaterial == null || dto.PictureMaterial == null || u.PictureMaterial.Any(c => dto.PictureMaterial.Contains(c))) &&
-                (dto.IsSale == null || u.Discount > 0 == dto.IsSale || (u.Discount != null && u.Discount != 0) == dto.IsSale) &&
+                (u.Price >= dto.MinPrice) &&
+                (u.Price <= dto.MaxPrice) &&
+                ((u.Diameter ?? 0m) >= dto.MinDiameter) &&
+                ((u.Diameter ?? decimal.MaxValue) <= dto.MaxDiameter) &&
+                ((u.Length == null || u.Length.Length == 0) || ((u.Length.Length == 1 && dto.MaxLength >= u.Length[0] && dto.MinLength <= u.Length[0]) || 
+                    (u.Length.Length == 2 && dto.MaxLength >= u.Length[0] && dto.MinLength <= u.Length[1]))) &&
+                ((u.Width == null || u.Width.Length == 0) || ((u.Width.Length == 1 && dto.MaxWidth >= u.Width[0] && dto.MinWidth <= u.Width[0]) || 
+                    (u.Width.Length == 2 && dto.MaxWidth >= u.Width[0] && dto.MinWidth <= u.Width[1]))) &&
+                ((u.Height == null || u.Height.Length == 0) || ((u.Height.Length == 1 && dto.MaxHeight >= u.Height[0] && dto.MinHeight <= u.Height[0]) || 
+                    (u.Height.Length == 2 && dto.MaxHeight >= u.Height[0] && dto.MinHeight <= u.Height[1]))) &&
+                ((u.Indent ?? 0m) >= dto.MinIndent) &&
+                ((u.Indent ?? decimal.MaxValue) <= dto.MaxIndent) &&
+                ((u.LampCount ?? 0) >= dto.MinLampCount) &&
+                ((u.LampCount ?? int.MaxValue) <= dto.MaxLampCount) &&
+                (dto.ChandelierTypes == null || u.ChandelierTypes == null || u.ChandelierTypes.Length == 0 || u.ChandelierTypes.Any(c => dto.ChandelierTypes.Contains(c))) &&
+                (dto.Materials == null || u.Materials == null || u.Materials.Length == 0 || u.Materials.Any(c => dto.Materials.Contains(c))) &&
+                (dto.PictureMaterial == null || u.PictureMaterial == null || u.PictureMaterial.Length == 0 || u.PictureMaterial.Any(c => dto.PictureMaterial.Contains(c))) &&
+                (dto.IsSale == null || (u.Discount ?? 0) > 0 == dto.IsSale) &&
                 (dto.BrandsId == null || dto.BrandsId.Contains(u.BrandId)) &&
                 (dto.CollectionsId == null || dto.CollectionsId.Contains((Guid)u.CollectionId!));
         }

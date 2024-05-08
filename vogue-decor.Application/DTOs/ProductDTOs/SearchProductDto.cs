@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using vogue_decor.Domain.Enums;
 
 namespace vogue_decor.Application.DTOs.ProductDTOs
@@ -16,6 +17,7 @@ namespace vogue_decor.Application.DTOs.ProductDTOs
         /// <summary>
         /// Идентификатор пользователя
         /// </summary>
+        [JsonIgnore]
         public Guid UserId { get; set; } = Guid.Empty;
         /// <summary>
         /// С какого количества начать выборку товаров (по умолчанию - 0)

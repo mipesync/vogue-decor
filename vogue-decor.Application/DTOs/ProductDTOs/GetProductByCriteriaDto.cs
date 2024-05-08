@@ -1,4 +1,5 @@
-﻿using vogue_decor.Domain.Enums;
+﻿using System.Text.Json.Serialization;
+using vogue_decor.Domain.Enums;
 
 namespace vogue_decor.Application.DTOs.ProductDTOs;
 
@@ -10,6 +11,7 @@ public class GetProductByCriteriaDto
     /// <summary>
     /// Идентификатор пользователя
     /// </summary>
+    [JsonIgnore]
     public Guid UserId { get; set; }
     /// <summary>
     /// Выбранные цвета
@@ -30,59 +32,61 @@ public class GetProductByCriteriaDto
     /// <summary>
     /// Минимальная цена
     /// </summary>
-    public decimal? MinPrice { get; set; }
+    public decimal? MinPrice { get; set; } = 0m;
     /// <summary>
     /// Максимальная цена
     /// </summary>
-    public decimal? MaxPrice { get; set; }
+    public decimal? MaxPrice { get; set; } = decimal.MaxValue;
     /// <summary>
     /// Минимальная длина
     /// </summary>
-    public decimal? MinLength { get; set; }
+    public decimal? MinLength { get; set; } = 0m;
     /// <summary>
     /// Максимальная длина
     /// </summary>
-    public decimal? MaxLength { get; set; }
+    public decimal? MaxLength { get; set; } = decimal.MaxValue;
     /// <summary>
     /// Минимальный диаметр
     /// </summary>
-    public decimal? MinDiameter { get; set; }
+    public decimal? MinDiameter { get; set; } = 0m;
     /// <summary>
     /// Максимальный диаметр
     /// </summary>
-    public decimal? MaxDiameter { get; set; }
+    public decimal? MaxDiameter { get; set; } = decimal.MaxValue;
     /// <summary>
     /// Минимальная высота
     /// </summary>
-    public decimal? MinHeight { get; set; }
+    public decimal? MinHeight { get; set; } = 0m;
     /// <summary>
     /// Максимальная высота
     /// </summary>
-    public decimal? MaxHeight { get; set; }
+    public decimal? MaxHeight { get; set; } = decimal.MaxValue;
     /// <summary>
     /// Минимальная ширина
     /// </summary>
-    public decimal? MinWidth { get; set; }
+    public decimal? MinWidth { get; set; } = 0m;
     /// <summary>
     /// Максимальная ширина
     /// </summary>
-    public decimal? MaxWidth { get; set; }
+    public decimal? MaxWidth { get; set; } = decimal.MaxValue;
     /// <summary>
     /// Минимальный отступ
     /// </summary>
-    public decimal? MinIndent { get; set; }
+    public decimal? MinIndent { get; set; } = 0m;
     /// <summary>
     /// Максимальный отступ
     /// </summary>
-    public decimal? MaxIndent { get; set; }
+    public decimal? MaxIndent { get; set; } = decimal.MaxValue;
+
     /// <summary>
     /// Минимальное количество лампочек
     /// </summary>
-    public int? MinLampCount { get; set; }
+    public int? MinLampCount { get; set; } = 0;
+
     /// <summary>
     /// Максимальное количество лампочек
     /// </summary>
-    public int? MaxLampCount { get; set; }
+    public int? MaxLampCount { get; set; } = int.MaxValue;
     /// <summary>
     /// Типы люстр
     /// </summary>

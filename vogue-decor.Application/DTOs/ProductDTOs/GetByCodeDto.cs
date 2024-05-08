@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace vogue_decor.Application.DTOs.ProductDTOs;
 
@@ -10,6 +11,7 @@ public class GetByCodeDto
     /// <summary>
     /// Идентификатор пользователя
     /// </summary>
+    [JsonIgnore]
     public Guid UserId { get; set; } = Guid.Empty;
 
     /// <summary>

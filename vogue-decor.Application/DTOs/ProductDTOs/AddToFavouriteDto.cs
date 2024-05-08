@@ -1,4 +1,6 @@
-﻿namespace vogue_decor.Application.DTOs.ProductDTOs
+﻿using System.Text.Json.Serialization;
+
+namespace vogue_decor.Application.DTOs.ProductDTOs
 {
     /// <summary>
     /// DTO для добавления товара в избранные
@@ -8,6 +10,7 @@
         /// <summary>
         /// Идентификатор пользователя
         /// </summary>
+        [JsonIgnore]
         public Guid UserId { get; set; } = Guid.Empty;
         /// <summary>
         /// Идентификатор товара
