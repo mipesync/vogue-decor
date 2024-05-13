@@ -204,7 +204,7 @@ namespace vogue_decor.Application.Repositories
         {
             var filterExpression = BuildLinqExpression(dto);
             
-            var products = await GetOrderedProductsAsync(sortType: dto.SortType, expression: filterExpression);
+            var products = await GetOrderedProductsAsync(dto.Count, dto.From, sortType: dto.SortType, expression: filterExpression);
 
             var counts = GetCounts(dto.UserId);
 
@@ -227,7 +227,7 @@ namespace vogue_decor.Application.Repositories
         {
             var filterExpression = BuildLinqExpression(dto);
     
-            var products = await GetOrderedProductsAsync(sortType: dto.SortType, expression: filterExpression);
+            var products = await GetOrderedProductsAsync(dto.Count, dto.From, sortType: dto.SortType, expression: filterExpression);
 
             var result = new GetFiltersCountResponseDto 
             { 
@@ -373,7 +373,7 @@ namespace vogue_decor.Application.Repositories
         public async Task<GetProductsResponseDto> GetByCollectionIdAsync(GetProductByCollectionIdDto dto,
             string hostUrl)
         {
-            var products = await GetOrderedProductsAsync(sortType: dto.SortType);
+            var products = await GetOrderedProductsAsync(dto.Count, dto.From, sortType: dto.SortType);
             products = products
                 .Where(u => u.CollectionId == dto.CollectionId)
                 .ToList();
@@ -422,7 +422,7 @@ namespace vogue_decor.Application.Repositories
             
             var strQueryWithoutArticle = article != string.Empty ? string.Join("", searchQuery.Replace($" {article}", "")).Trim() : searchQuery;
             
-            var products = await GetOrderedProductsAsync(sortType: dto.SortType, searchQuery: strQueryWithoutArticle, article: article);
+            var products = await GetOrderedProductsAsync(dto.Count, dto.From, sortType: dto.SortType, searchQuery: strQueryWithoutArticle, article: article);
             
             if (products.Count == 0 && article!.Trim() == searchQuery.Trim())
             {
@@ -431,7 +431,9 @@ namespace vogue_decor.Application.Repositories
                     var articleProducts = await GetByArticleAsync(new GetByArticleDto
                     {
                         Article = article,
-                        UserId = dto.UserId
+                        UserId = dto.UserId,
+                        From = dto.From,
+                        Count = dto.Count
                     }, hostUrl);
     
                     return articleProducts;
@@ -768,7 +770,7 @@ namespace vogue_decor.Application.Repositories
             return result.Trim();
         }
 
-        private async Task<List<Product>> GetOrderedProductsAsync(SortTypes? sortType, 
+        private async Task<List<Product>> GetOrderedProductsAsync(int take, int skip, SortTypes? sortType, 
             Expression<Func<Product, bool>>? expression = null, string? searchQuery = null, string? article = null)
         {
             List<Product> products;
@@ -788,7 +790,9 @@ namespace vogue_decor.Application.Repositories
                         .Include(u => u.Favourites)
                         .Include(u => u.ProductUsers)
                         .Where(expression ?? defaultExpression)
-                        .OrderBy(u => u.Rating)
+                        .OrderBy(u => u.Rating)               
+                        .Skip(skip)
+                        .Take(take)
                         .ToListAsync(CancellationToken.None);
                     break;
                 case SortTypes.BY_RATING_DESC:
@@ -796,14 +800,18 @@ namespace vogue_decor.Application.Repositories
                         .Include(u => u.Favourites)
                         .Include(u => u.ProductUsers)
                         .Where(expression ?? defaultExpression)
-                        .OrderByDescending(u => u.Rating).ToListAsync(CancellationToken.None);
+                        .OrderByDescending(u => u.Rating)               
+                        .Skip(skip)
+                        .Take(take).ToListAsync(CancellationToken.None);
                     break;
                 case SortTypes.BY_NOVELTY_ASC:
                     products = await _dbContext.Products.AsNoTracking()
                         .Include(u => u.Favourites)
                         .Include(u => u.ProductUsers)
                         .Where(expression ?? defaultExpression)
-                        .OrderBy(u => u.PublicationDate)
+                        .OrderBy(u => u.PublicationDate)               
+                        .Skip(skip)
+                        .Take(take)
                         .ToListAsync(CancellationToken.None);
                     break;
                 case SortTypes.BY_NOVELTY_DESC:
@@ -811,7 +819,9 @@ namespace vogue_decor.Application.Repositories
                         .Include(u => u.Favourites)
                         .Include(u => u.ProductUsers)
                         .Where(expression ?? defaultExpression)
-                        .OrderByDescending(u => u.PublicationDate)
+                        .OrderByDescending(u => u.PublicationDate)               
+                        .Skip(skip)
+                        .Take(take)
                         .ToListAsync(CancellationToken.None);
                     break;
                 case SortTypes.BY_POPULARITY:
@@ -819,7 +829,9 @@ namespace vogue_decor.Application.Repositories
                         .Include(u => u.Favourites)
                         .Include(u => u.ProductUsers)
                         .Where(expression ?? defaultExpression)
-                        .OrderByDescending(u => u.PurchasedCount)
+                        .OrderByDescending(u => u.PurchasedCount)               
+                        .Skip(skip)
+                        .Take(take)
                         .ToListAsync(CancellationToken.None);
                     break;
                 case SortTypes.BY_PRICE_ASC:
@@ -827,7 +839,9 @@ namespace vogue_decor.Application.Repositories
                         .Include(u => u.Favourites)
                         .Include(u => u.ProductUsers)
                         .Where(expression ?? defaultExpression)
-                        .OrderBy(u => u.Price)
+                        .OrderBy(u => u.Price)               
+                        .Skip(skip)
+                        .Take(take)
                         .ToListAsync(CancellationToken.None);
                     break;
                 case SortTypes.BY_PRICE_DESC:
@@ -835,19 +849,25 @@ namespace vogue_decor.Application.Repositories
                         .Include(u => u.Favourites)
                         .Include(u => u.ProductUsers)
                         .Where(expression ?? defaultExpression)
-                        .OrderByDescending(u => u.Price)
+                        .OrderByDescending(u => u.Price)               
+                        .Skip(skip)
+                        .Take(take)
                         .ToListAsync(CancellationToken.None);
                     break;
                 default:
                     products = await _dbContext.Products.AsNoTracking()
                         .Include(u => u.Favourites)
                         .Include(u => u.ProductUsers)
-                        .Where(expression ?? defaultExpression)
+                        .Where(expression ?? defaultExpression)               
+                        .Skip(skip)
+                        .Take(take)
                         .ToListAsync(CancellationToken.None);
                     break;
             }
 
-            return string.IsNullOrEmpty(article) ? products : products.Where(p => p.Article.Contains(article)).ToList();
+            return string.IsNullOrEmpty(article) ? products : products.Where(p => p.Article.Contains(article))
+                .Skip(skip)
+                .Take(take).ToList();
         }
 
         private string NormalizeQuery(string query)

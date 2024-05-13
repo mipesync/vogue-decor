@@ -24,12 +24,10 @@ namespace vogue_decor.Controllers
             get
             {
                 var claimNameId = Request.HttpContext.User.Claims.FirstOrDefault(u => u.Type == ClaimTypes.NameIdentifier);
-                if (claimNameId is null)
-                    return Guid.Empty;
-            
-                return Guid.Parse(claimNameId.Value);
+                return claimNameId is null ? Guid.Empty : Guid.Parse(claimNameId.Value);
             }
         }
+        
         private readonly IUserRepository _userRepository;
         private string UrlRaw => $"{Request.Scheme}://{Request.Host}";
 
@@ -140,6 +138,7 @@ namespace vogue_decor.Controllers
         [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
         public async Task<IActionResult> UpdateDetails([FromBody] UpdateUserDetailsDto dto)
         {
+            dto.UserId = UserId;
             await _userRepository.UpdateDetails(dto);
 
             return Ok();
@@ -162,6 +161,7 @@ namespace vogue_decor.Controllers
         [SwaggerResponse(statusCode: StatusCodes.Status500InternalServerError, type: typeof(ErrorModel))]
         public async Task<IActionResult> OrderPlace([FromQuery] OrderPlaceDto dto)
         {
+            dto.UserId = UserId;
             await _userRepository.OrderPlace(dto, UrlRaw);
 
             return Ok();
