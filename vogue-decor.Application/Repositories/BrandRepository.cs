@@ -140,7 +140,7 @@ public class BrandRepository : IBrandRepository
 
     public async Task<GetCollectionsResponseDto> GetCollectionsAsync(GetCollectionsByBrandIdDto dto, string hostUrl)
     {
-        await GetByIdAsync(dto.BrandId, hostUrl);
+        var brand = await GetByIdAsync(dto.BrandId, hostUrl);
             
         var collections = await _dbContext.Collections
             .AsNoTracking()
@@ -156,7 +156,8 @@ public class BrandRepository : IBrandRepository
         var result = new GetCollectionsResponseDto
         {
             Collections = collections,
-            TotalCount = totalCount.Count()
+            BrandName = brand.Name,
+            TotalCount = totalCount.Count
         };
 
         result = UrlParse(result, hostUrl);

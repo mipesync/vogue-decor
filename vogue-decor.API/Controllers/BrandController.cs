@@ -106,7 +106,7 @@ public class BrandController : Controller
     /// <response code="200">Запрос выполнен успешно</response>
     /// <response code="404">Бренд не найден</response>
     /// <response code="500">Внутренняя ошибка сервера</response>
-    [HttpDelete("/preview")]
+    [HttpDelete("preview")]
     [RoleValidate(Roles.ADMIN)]
     [SwaggerResponse(statusCode: StatusCodes.Status200OK, type: null)]
     [SwaggerResponse(statusCode: StatusCodes.Status404NotFound, type: typeof(ErrorModel))]

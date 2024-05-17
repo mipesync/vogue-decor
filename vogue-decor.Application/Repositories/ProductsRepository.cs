@@ -199,12 +199,12 @@ namespace vogue_decor.Application.Repositories
             return result;
         }
         
-        public async Task<GetProductsResponseDto> GetByCriteriaAsync(GetProductByCriteriaDto dto, 
+        public async Task<GetProductsByCriteriaResponseDto> GetByCriteriaAsync(GetProductByCriteriaDto dto, 
             string hostUrl)
         {
             var filterExpression = BuildLinqExpression(dto);
             
-            var products = await GetOrderedProductsAsync(dto.Count, dto.From, sortType: dto.SortType, expression: filterExpression);
+            var products = await GetOrderedProductsAsync(sortType: dto.SortType, expression: filterExpression);
 
             var counts = GetCounts(dto.UserId);
 
@@ -214,20 +214,40 @@ namespace vogue_decor.Application.Repositories
 
             productsShort = UrlParse(productsShort, hostUrl);
 
-            return new GetProductsResponseDto 
+            var dictionaryCollectionProducts = await ParseToCollectionProductsAsync(products.Skip(dto.From).Take(dto.Count).ToList(), productsShort);
+
+            return new GetProductsByCriteriaResponseDto 
             { 
-                Products = productsShort, 
+                Products = dictionaryCollectionProducts, 
                 TotalCount = products.Count,
                 CartCount = counts.cart,
                 FavouritesCount = counts.favourites
             };
         }
 
+        private async Task<Dictionary<string, List<ProductShortResponseDto>>> ParseToCollectionProductsAsync(List<Product> products, List<ProductShortResponseDto> productShort)
+        {
+            Dictionary<string, List<ProductShortResponseDto>> result = new();
+            foreach (var product in products)
+            {
+                var collection = await _dbContext.Collections.FirstOrDefaultAsync(u => u.Id == product.CollectionId, CancellationToken.None);
+                
+                if (collection is null) continue;
+                
+                if (result.ContainsKey(collection.Name))
+                    result[collection.Name].Add(productShort.First(u => u.Id == product.Id));
+                else result.Add(collection.Name, new List<ProductShortResponseDto>
+                    { productShort.First(u => u.Id == product.Id) });
+            }
+
+            return result;
+        }
+
         public async Task<GetFiltersCountResponseDto> GetFiltersCountAsync(GetProductByCriteriaDto dto)
         {
             var filterExpression = BuildLinqExpression(dto);
     
-            var products = await GetOrderedProductsAsync(dto.Count, dto.From, sortType: dto.SortType, expression: filterExpression);
+            var products = await GetOrderedProductsAsync(sortType: dto.SortType, expression: filterExpression);
 
             var result = new GetFiltersCountResponseDto 
             { 
@@ -238,14 +258,38 @@ namespace vogue_decor.Application.Repositories
                 Styles = GetFiltersByStyle(products),
                 MinPrice = products.Select(p => p.Price).Min(),
                 MaxPrice = products.Select(p => p.Price).Max(),
-                MinLength = products.Select(p => p.Length![0]).Min(),
-                MaxLength = products.Max(p => p.Length!.Length == 2 ? p.Length![1] : p.Length[0]),
+                MinLength = products
+                    .Where(p => p.Length != null && p.Length.Any())
+                    .Select(p => p.Length!.Min())
+                    .DefaultIfEmpty(0)
+                    .Min(),
+                MaxLength = products
+                    .Where(p => p.Length != null && p.Length.Any())
+                    .Select(p => p.Length!.Length == 2 ? p.Length[1] : p.Length[0])
+                    .DefaultIfEmpty(0)
+                    .Max(),
+                MinHeight = products
+                    .Where(p => p.Height != null && p.Height.Any())
+                    .Select(p => p.Height![0])
+                    .DefaultIfEmpty(0)
+                    .Min(),
+                MaxHeight = products
+                    .Where(p => p.Height is { Length: 2 })
+                    .Select(p => p.Height![1])
+                    .DefaultIfEmpty(0)
+                    .Max(),
+                MinWidth = products
+                    .Where(p => p.Width != null && p.Width.Any())
+                    .Select(p => p.Width![0])
+                    .DefaultIfEmpty(0)
+                    .Min(),
+                MaxWidth = products
+                    .Where(p => p.Width is { Length: 2 })
+                    .Select(p => p.Width![1])
+                    .DefaultIfEmpty(0)
+                    .Max(),
                 MinDiameter = products.Select(p => p.Diameter).Min(),
                 MaxDiameter = products.Select(p => p.Diameter).Max(),
-                MinHeight = products.Select(p => p.Height![0]).Min(),
-                MaxHeight = products.Max(p => p.Height!.Length == 2 ? p.Height![1] : p.Height[0]),
-                MinWidth = products.Select(p => p.Width![0]).Min(),
-                MaxWidth = products.Max(p => p.Width!.Length == 2 ? p.Width![1] : p.Width[0]),
                 MinIndent = products.Select(p => p.Indent).Min(),
                 MaxIndent = products.Select(p => p.Indent).Max(),
                 MinLampCount = products.Select(p => p.LampCount).Min(),
@@ -373,7 +417,7 @@ namespace vogue_decor.Application.Repositories
         public async Task<GetProductsResponseDto> GetByCollectionIdAsync(GetProductByCollectionIdDto dto,
             string hostUrl)
         {
-            var products = await GetOrderedProductsAsync(dto.Count, dto.From, sortType: dto.SortType);
+            var products = await GetOrderedProductsAsync(sortType: dto.SortType);
             products = products
                 .Where(u => u.CollectionId == dto.CollectionId)
                 .ToList();
@@ -422,7 +466,7 @@ namespace vogue_decor.Application.Repositories
             
             var strQueryWithoutArticle = article != string.Empty ? string.Join("", searchQuery.Replace($" {article}", "")).Trim() : searchQuery;
             
-            var products = await GetOrderedProductsAsync(dto.Count, dto.From, sortType: dto.SortType, searchQuery: strQueryWithoutArticle, article: article);
+            var products = await GetOrderedProductsAsync(sortType: dto.SortType, searchQuery: strQueryWithoutArticle, article: article, take: dto.Count, skip: dto.From);
             
             if (products.Count == 0 && article!.Trim() == searchQuery.Trim())
             {
@@ -770,8 +814,9 @@ namespace vogue_decor.Application.Repositories
             return result.Trim();
         }
 
-        private async Task<List<Product>> GetOrderedProductsAsync(int take, int skip, SortTypes? sortType, 
-            Expression<Func<Product, bool>>? expression = null, string? searchQuery = null, string? article = null)
+        private async Task<List<Product>> GetOrderedProductsAsync(SortTypes? sortType,
+            Expression<Func<Product, bool>>? expression = null, string? searchQuery = null, string? article = null,
+            int take = 10000, int skip = 0)
         {
             List<Product> products;
 
@@ -783,87 +828,44 @@ namespace vogue_decor.Application.Repositories
             Expression<Func<Product, bool>> defaultExpression =
                 u => searchQuery == null || u.SearchVector.Matches(EF.Functions.ToTsQuery("russian", normalizedQuery));
 
+            var productsQuery = _dbContext.Products.AsNoTracking()
+                .Include(u => u.Favourites)
+                .Include(u => u.ProductUsers)
+                .Where(expression ?? defaultExpression);
+            
             switch (sortType)
             {
                 case SortTypes.BY_RATING_ASC:
-                    products = await _dbContext.Products.AsNoTracking()
-                        .Include(u => u.Favourites)
-                        .Include(u => u.ProductUsers)
-                        .Where(expression ?? defaultExpression)
-                        .OrderBy(u => u.Rating)               
-                        .Skip(skip)
-                        .Take(take)
-                        .ToListAsync(CancellationToken.None);
+                    productsQuery = productsQuery
+                        .OrderBy(u => u.Rating);
                     break;
                 case SortTypes.BY_RATING_DESC:
-                    products = await _dbContext.Products.AsNoTracking()
-                        .Include(u => u.Favourites)
-                        .Include(u => u.ProductUsers)
-                        .Where(expression ?? defaultExpression)
-                        .OrderByDescending(u => u.Rating)               
-                        .Skip(skip)
-                        .Take(take).ToListAsync(CancellationToken.None);
+                    productsQuery = productsQuery
+                        .OrderByDescending(u => u.Rating);
                     break;
                 case SortTypes.BY_NOVELTY_ASC:
-                    products = await _dbContext.Products.AsNoTracking()
-                        .Include(u => u.Favourites)
-                        .Include(u => u.ProductUsers)
-                        .Where(expression ?? defaultExpression)
-                        .OrderBy(u => u.PublicationDate)               
-                        .Skip(skip)
-                        .Take(take)
-                        .ToListAsync(CancellationToken.None);
+                    productsQuery = productsQuery
+                        .OrderBy(u => u.PublicationDate);
                     break;
                 case SortTypes.BY_NOVELTY_DESC:
-                    products = await _dbContext.Products.AsNoTracking()
-                        .Include(u => u.Favourites)
-                        .Include(u => u.ProductUsers)
-                        .Where(expression ?? defaultExpression)
-                        .OrderByDescending(u => u.PublicationDate)               
-                        .Skip(skip)
-                        .Take(take)
-                        .ToListAsync(CancellationToken.None);
+                    productsQuery = productsQuery
+                        .OrderByDescending(u => u.PublicationDate);
                     break;
                 case SortTypes.BY_POPULARITY:
-                    products = await _dbContext.Products.AsNoTracking()
-                        .Include(u => u.Favourites)
-                        .Include(u => u.ProductUsers)
-                        .Where(expression ?? defaultExpression)
-                        .OrderByDescending(u => u.PurchasedCount)               
-                        .Skip(skip)
-                        .Take(take)
-                        .ToListAsync(CancellationToken.None);
+                    productsQuery = productsQuery
+                        .OrderByDescending(u => u.PurchasedCount);
                     break;
                 case SortTypes.BY_PRICE_ASC:
-                    products = await _dbContext.Products.AsNoTracking()
-                        .Include(u => u.Favourites)
-                        .Include(u => u.ProductUsers)
-                        .Where(expression ?? defaultExpression)
-                        .OrderBy(u => u.Price)               
-                        .Skip(skip)
-                        .Take(take)
-                        .ToListAsync(CancellationToken.None);
+                    productsQuery = productsQuery
+                        .OrderBy(u => u.Price);
                     break;
                 case SortTypes.BY_PRICE_DESC:
-                    products = await _dbContext.Products.AsNoTracking()
-                        .Include(u => u.Favourites)
-                        .Include(u => u.ProductUsers)
-                        .Where(expression ?? defaultExpression)
-                        .OrderByDescending(u => u.Price)               
-                        .Skip(skip)
-                        .Take(take)
-                        .ToListAsync(CancellationToken.None);
-                    break;
-                default:
-                    products = await _dbContext.Products.AsNoTracking()
-                        .Include(u => u.Favourites)
-                        .Include(u => u.ProductUsers)
-                        .Where(expression ?? defaultExpression)               
-                        .Skip(skip)
-                        .Take(take)
-                        .ToListAsync(CancellationToken.None);
+                    productsQuery = productsQuery
+                        .OrderByDescending(u => u.Price);
                     break;
             }
+
+            products = await productsQuery.Skip(skip).Take(take).ToListAsync(CancellationToken.None);
 
             return string.IsNullOrEmpty(article) ? products : products.Where(p => p.Article.Contains(article))
                 .Skip(skip)
@@ -998,7 +1000,7 @@ namespace vogue_decor.Application.Repositories
 
         private Dictionary<Guid, GetFiltersCountResponseDto.FilterDto> GetFiltersByCollections(IEnumerable<Product> products)
         {
-            return GetFiltersBySecondaryEntities(products, p => (Guid)p.CollectionId!, _dbContext.Collections.AsNoTracking());
+            return GetFiltersBySecondaryEntities(products, p => p.CollectionId ?? Guid.Empty, _dbContext.Collections.AsNoTracking());
         }
 
         private Dictionary<Guid, GetFiltersCountResponseDto.FilterDto> GetFiltersBySecondaryEntities<T>(

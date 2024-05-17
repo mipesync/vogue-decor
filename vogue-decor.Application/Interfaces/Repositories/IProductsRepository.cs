@@ -59,8 +59,8 @@ namespace vogue_decor.Application.Interfaces.Repositories
         /// </summary>
         /// <param name="dto">Входные данные для получения спичка товаров по критериям</param>
         /// <param name="hostUrl">Домен API</param>
-        /// <returns><see cref="GetProductByCriteriaDto"/></returns>
-        Task<GetProductsResponseDto> GetByCriteriaAsync(GetProductByCriteriaDto dto, string hostUrl);
+        /// <returns><see cref="GetProductsByCriteriaResponseDto"/></returns>
+        Task<GetProductsByCriteriaResponseDto> GetByCriteriaAsync(GetProductByCriteriaDto dto, string hostUrl);
 
         /// <summary>
         /// Получить товар по артикулу

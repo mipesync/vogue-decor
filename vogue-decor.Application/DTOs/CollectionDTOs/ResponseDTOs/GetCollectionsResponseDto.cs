@@ -10,6 +10,10 @@
         /// </summary>
         public List<CollectionLookupDto> Collections { get; set; } = new();
         /// <summary>
+        /// Название бренда
+        /// </summary>
+        public string BrandName { get; set; }
+        /// <summary>
         /// Общее количество коллекций
         /// </summary>
         public int TotalCount { get; set; }

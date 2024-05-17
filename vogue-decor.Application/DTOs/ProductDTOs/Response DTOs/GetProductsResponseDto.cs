@@ -21,5 +21,9 @@
         /// Количество товаров в избранном
         /// </summary>
         public int FavouritesCount { get; set; } = 0;
+        /// <summary>
+        /// Название бренда
+        /// </summary>
+        public string? BrandName { get; set; }
     }
 }
