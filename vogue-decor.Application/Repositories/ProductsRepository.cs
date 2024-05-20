@@ -199,7 +199,7 @@ namespace vogue_decor.Application.Repositories
             return result;
         }
         
-        public async Task<GetProductsByCriteriaResponseDto> GetByCriteriaAsync(GetProductByCriteriaDto dto, 
+        public async Task<GetProductsResponseDto> GetByCriteriaAsync(GetProductByCriteriaDto dto, 
             string hostUrl)
         {
             var filterExpression = BuildLinqExpression(dto);
@@ -214,33 +214,25 @@ namespace vogue_decor.Application.Repositories
 
             productsShort = UrlParse(productsShort, hostUrl);
 
-            var dictionaryCollectionProducts = await ParseToCollectionProductsAsync(products.Skip(dto.From).Take(dto.Count).ToList(), productsShort);
-
-            return new GetProductsByCriteriaResponseDto 
+            string? collectionName = null;
+            if (dto.CollectionsId is not null && dto.CollectionsId.Length == 1)
+                collectionName = await GetCollectionName(dto.CollectionsId.First());
+                
+            return new GetProductsResponseDto 
             { 
-                Products = dictionaryCollectionProducts, 
+                Products = productsShort,
+                CollectionName = collectionName,
                 TotalCount = products.Count,
                 CartCount = counts.cart,
                 FavouritesCount = counts.favourites
             };
         }
 
-        private async Task<Dictionary<string, List<ProductShortResponseDto>>> ParseToCollectionProductsAsync(List<Product> products, List<ProductShortResponseDto> productShort)
+        private async Task<string?> GetCollectionName(Guid collectionId)
         {
-            Dictionary<string, List<ProductShortResponseDto>> result = new();
-            foreach (var product in products)
-            {
-                var collection = await _dbContext.Collections.FirstOrDefaultAsync(u => u.Id == product.CollectionId, CancellationToken.None);
-                
-                if (collection is null) continue;
-                
-                if (result.ContainsKey(collection.Name))
-                    result[collection.Name].Add(productShort.First(u => u.Id == product.Id));
-                else result.Add(collection.Name, new List<ProductShortResponseDto>
-                    { productShort.First(u => u.Id == product.Id) });
-            }
+            var collection = await _dbContext.Collections.FirstOrDefaultAsync(u => u.Id == collectionId, CancellationToken.None);
 
-            return result;
+            return collection?.Name;
         }
 
         public async Task<GetFiltersCountResponseDto> GetFiltersCountAsync(GetProductByCriteriaDto dto)

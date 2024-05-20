@@ -10,6 +10,10 @@
         /// </summary>
         public List<ProductShortResponseDto> Products { get; set; } = new();
         /// <summary>
+        /// Название коллекции
+        /// </summary>
+        public string? CollectionName { get; set; } 
+        /// <summary>
         /// Количество товаров 
         /// </summary>
         public int TotalCount { get; set; } = 0;
