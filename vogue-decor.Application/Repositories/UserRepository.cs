@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Globalization;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using vogue_decor.Application.Common.Exceptions;
 using vogue_decor.Application.DTOs.UserDTOs;
@@ -171,55 +172,53 @@ namespace vogue_decor.Application.Repositories
             var orderComposition = new StringBuilder();
 
             var iter = 0;
-
             var totalCost = 0m;
+            
+            var html = await GetOrderHtmlAsync();
 
             foreach (var product in cart.Products)
             {
                 iter++;
 
-                totalCost += product.Price;
+                var price = product.Discount == 0 ? product.Price : product.Price * (1 - product.Discount / 100m);
+                totalCost += price * product.Count;
 
                 orderComposition.Append(
                     "<tr>" +
-                    $"<th>{iter}</th>" +
-                    $"<th>{product.Id}</th>" +
-                    $"<th>{product.Name}</th>" +
-                    $"<th>{product.Count}шт.</th>" +
-                    $"<th>{product.Price}р.</th>" +
+                        "<td style=\"padding:2px;border-left:solid 1px #aaa;border-bottom:solid 1px #aaa;\"class=\"cart_img_mr_css_attr\">" +
+                            $"<a href=\"{hostUrl}/Product/{product.Id}\" target=\"_blank\" rel=\" noopener noreferrer\">" +
+                                $"<img src=\"{product.Files[0].Url}\" width=\"150\" alt=\"{product.Name}\" title=\"{product.Name}\">" +
+                            "</a>" +
+                        "</td>" +
+                        $"<td style=\"padding:2px;border-left:solid 1px #aaa;border-bottom:solid 1px #aaa;\" class=\"cart_name_mr_css_attr\">{product.Name}<br></td>" +
+                        $"<td style=\"padding:2px;border-left:solid 1px #aaa;border-bottom:solid 1px #aaa;text-align:center;\" class=\"cart_count_mr_css_attr\">{product.Count}</td>" +
+                        $"<td style=\"padding:2px;border-left:solid 1px #aaa;border-bottom:solid 1px #aaa;text-align:right;\" class=\"cart_price_mr_css_attr\">{product.Price}</td>" +
+                        $"<td style=\"padding:2px;border-left:solid 1px #aaa;border-bottom:solid 1px #aaa;text-align:right;\" class=\"cart_price_mr_css_attr\">{product.Discount}</td>" +
+                        $"<td style=\"padding:2px;border-left:solid 1px #aaa;border-bottom:solid 1px #aaa;text-align:right;\" class=\"cart_summ_mr_css_attr\">{price * product.Count}</td>" +
                     "</tr>");
             }
 
-            var message =
-                "Состав заказа:<br/>" +
-                "<table width=\"80%\">" +
-                "" +
-                "<th>Позиция</th>" +
-                "<th>Id</th>" +
-                "<th>Название</th>" +
-                "<th>Кол-во</th>" +
-                "<th>Стоимость</th>" +
-                $"{orderComposition}" +
-                "</table>" +
-                "<table align=\"right\">" +
-                "<th><b>Итого: </b></th>" +
-                $"<th><b>{totalCost}р.</b></th>" +
-                $"</table>";
+            var orderNumber = ExtractOrderNumber(Guid.NewGuid());
 
-            await _emailSender.SendEmailAsync("Новый заказ",
-                "<b>Информация о пользователе:</b> <br/>" +
-                "<ul>" +
-                $"<b><li>Имя:</li></b> {dto.Name} <br/>" +
-                $"<b><li>Адрес почты:</li></b> {user.Email} <br/>" +
-                $"<b><li>Номер телефона:</li></b> {dto.PhoneNumber} <br/>" +
-                "</ul>" +
-                "<b>Комментарий к заказу:</b><br/>" +
-                $"{dto.Comment}" +
-                "<b><hr/></b><br/>" + message);
+            html = html.Replace("#(order_total_price)", totalCost.ToString(CultureInfo.CurrentCulture));
+            html = html.Replace("#(order_content)", orderComposition.ToString());
+            html = html.Replace("#(customer_name)", dto.Name);
+            html = html.Replace("#(customer_phone)", dto.PhoneNumber);
+            html = html.Replace("#(customer_email)", user.Email);
+            html = html.Replace("#(customer_comment)", dto.Comment);
 
-            await _emailSender.SendEmailAsync(user.Email, "Заказ успешно оформлен",
-                $"{dto.Name}, спасибо за заказ! <br/>" + message +
-                $"С уважением, администрация Butterfly Lightning Co.");
+            var userTitle =
+                "Здравствуйте! Вы оформили заказ на сайте <a href=\"https://toplight.pro/Home\" target=\"_blank\">www.toplight.pro</a> " +
+                $"Номер заказа: №{orderNumber}. По данному заказу вам была предоставлена дополнительная скидка на один или несколько товаров." +
+                $"<br> Ваш заказ №{orderNumber}";
+            var userHtml = html.Replace("#(order_title)", userTitle);
+            
+            var sellerTitle = $"Был оформлен новый заказ №{orderNumber}";
+            var sellerHtml = html.Replace("#(order_title)", sellerTitle);
+            
+            await _emailSender.SendEmailAsync("Новый заказ", sellerHtml);
+
+            await _emailSender.SendEmailAsync(user.Email, "Заказ успешно оформлен", userHtml);
 
             foreach (var product in user.Products)
             {
@@ -245,6 +244,14 @@ namespace vogue_decor.Application.Repositories
                 "<b><hr/></b><br/>" +
                 $"Текст обращения: \n" +
                 $"{dto.Text}");
+        }
+
+        private static async Task<string> GetOrderHtmlAsync()
+        {
+            var filePath = $@"{Directory.GetCurrentDirectory()}\order.html";
+            
+            using var reader = new StreamReader(filePath);
+            return await reader.ReadToEndAsync();
         }
 
         private GetCartResponseDto ParseToCart(List<ProductUser> productUsers, string hostUrl)
@@ -321,6 +328,13 @@ namespace vogue_decor.Application.Repositories
                     product.Files.Remove(product.Files[i]);
             }
             return product;
+        }
+
+        private static string ExtractOrderNumber(Guid guid)
+        {
+            var guidString = guid.ToString();
+            var digitsOnly = new string(guidString.Where(char.IsDigit).ToArray());
+            return digitsOnly[..5];
         }
     }
 }

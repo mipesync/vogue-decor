@@ -849,11 +849,11 @@ namespace vogue_decor.Application.Repositories
                     break;
                 case SortTypes.BY_PRICE_ASC:
                     productsQuery = productsQuery
-                        .OrderBy(u => u.Price);
+                        .OrderBy(u => u.Discount == 0 || u.Discount == null ? u.Price : u.Price * (1 - u.Discount / 100m));
                     break;
                 case SortTypes.BY_PRICE_DESC:
                     productsQuery = productsQuery
-                        .OrderByDescending(u => u.Price);
+                        .OrderByDescending(u => u.Discount == 0 || u.Discount == null ? u.Price : u.Price * (1 - u.Discount / 100m));
                     break;
             }
 
